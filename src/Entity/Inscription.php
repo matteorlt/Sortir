@@ -20,6 +20,9 @@ class Inscription
     #[ORM\ManyToOne(inversedBy: 'inscritption')]
     private ?Participant $participant = null;
 
+    #[ORM\ManyToOne(inversedBy: 'inscriptions')]
+    private ?Sortie $sortie = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -45,6 +48,18 @@ class Inscription
     public function setParticipant(?Participant $participant): static
     {
         $this->participant = $participant;
+
+        return $this;
+    }
+
+    public function getSortie(): ?Sortie
+    {
+        return $this->sortie;
+    }
+
+    public function setSortie(?Sortie $sortie): static
+    {
+        $this->sortie = $sortie;
 
         return $this;
     }
