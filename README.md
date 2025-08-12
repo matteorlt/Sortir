@@ -42,12 +42,12 @@ Copier
 Modifier
 composer install
 3️⃣ Configurer l'environnement
-Copiez le fichier .env et adaptez les variables de connexion à votre base de données :
+Copiez le fichier .env.local et adaptez les variables de connexion à votre base de données :
 
 bash
 Copier
 Modifier
-cp .env .env.local
+cp .env.local .env.local.local
 Exemple de configuration :
 
 ini

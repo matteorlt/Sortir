@@ -1,0 +1,53 @@
+{# templates/components/_footer.html.twig #}
+<footer class="bg-white border-t border-gray-200">
+    <div class="max-w-6xl mx-auto px-4 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+            <!-- Liens utiles -->
+            <div>
+                <h4 class="text-lg font-semibold text-gray-900 mb-4">Liens utiles</h4>
+                <ul class="space-y-2">
+                    <li>
+                        <a href="" class="text-gray-600 hover:text-gray-900">
+                            Mentions légales
+                        </a>
+                    </li>
+                    <li>
+                        <a href="" class="text-gray-600 hover:text-gray-900">
+                            Politique de confidentialité
+                        </a>
+                    </li>
+                    <li>
+                        <a href="" class="text-gray-600 hover:text-gray-900">
+                            Contact BDE
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Réseaux sociaux -->
+            <div>
+                <h4 class="text-lg font-semibold text-gray-900 mb-4">Suivez-nous</h4>
+                <div class="flex space-x-4">
+                    <a href="#" aria-label="Facebook" class="text-gray-600 hover:text-blue-600">
+                        <span class="text-sm">Facebook</span>
+                    </a>
+                    <a href="#" aria-label="Instagram" class="text-gray-600 hover:text-pink-600">
+                        <span class="text-sm">Instagram</span>
+                    </a>
+                    <a href="#" aria-label="Twitter" class="text-gray-600 hover:text-blue-400">
+                        <span class="text-sm">Twitter</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Logo ENI + Copyright -->
+            <div class="text-center md:text-right">
+                <div class="flex items-center justify-center md:justify-end mb-4">
+                    <span class="text-gray-700 font-medium">ENI École Informatique</span>
+                </div>
+                <p class="text-gray-600 text-sm">&copy; Sortir.com - {{ 'now'|date('Y') }}</p>
+            </div>
+        </div>
+    </div>
+</footer>
