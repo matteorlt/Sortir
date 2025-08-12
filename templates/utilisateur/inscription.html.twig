@@ -6,16 +6,16 @@
     <h1>Créer un compte</h1>
 
     {{ form_start(form) }}
-        {{ form_row(form.pseudo) }}
-        {{ form_row(form.nom) }}
-        {{ form_row(form.prenom) }}
-        {{ form_row(form.telephone) }}
-        {{ form_row(form.mail) }}
-        {{ form_row(form.plainPassword.first) }}
-        {{ form_row(form.plainPassword.second) }}
-        {{ form_row(form.photoFile) }}
-        {{ form_row(form.campus) }}
+    {{ form_row(form.pseudo) }}
+    {{ form_row(form.nom) }}
+    {{ form_row(form.prenom) }}
+    {{ form_row(form.telephone) }}
+    {{ form_row(form.mail) }}
+    {{ form_row(form.plainPassword.first) }}
+    {{ form_row(form.plainPassword.second) }}
+    {{ form_row(form.photoFile) }}
+    {{ form_row(form.campus) }}
 
-        <button type="submit" class="btn btn-primary">Envoyer</button>
+    <button type="submit" class="btn btn-primary">Envoyer</button>
     {{ form_end(form) }}
 {% endblock %}

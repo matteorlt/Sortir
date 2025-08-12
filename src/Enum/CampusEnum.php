@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Enum;
 
 enum CampusEnum: string
@@ -8,5 +7,4 @@ enum CampusEnum: string
     case NIORT = 'Niort';
     case NANTES = 'Nantes';
     case QUIMPER = 'Quimper';
-
 }
