@@ -6,9 +6,11 @@ use App\Repository\ParticipantRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: ParticipantRepository::class)]
-class Participant
+class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -231,5 +233,27 @@ class Participant
         }
 
         return $this;
+    }
+
+    // Méthodes requises par UserInterface
+    public function getRoles(): array
+    {
+        return ['ROLE_USER'];
+    }
+
+    public function eraseCredentials(): void
+    {
+        // Si vous stockez des données temporaires sensibles sur l'utilisateur, effacez-les ici
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->mail;
+    }
+
+    // Méthode requise par PasswordAuthenticatedUserInterface
+    public function getPassword(): ?string
+    {
+        return $this->motDePasse;
     }
 }

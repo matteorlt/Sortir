@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Participant;
-use App\Enum\CampusEnum;
 use App\Repository\CampusRepository;
 use App\Form\InscriptionType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -65,22 +64,7 @@ final class UtilisateurController extends AbstractController
                 }
             }
 
-            // Conversion de l'enum CampusEnum -> entité Campus
-            /** @var CampusEnum|null $campusEnum */
-            $campusEnum = $form->get('campus')->getData();
-            if ($campusEnum) {
-                $campus = $campusRepository->findOneBy(['nomCampus' => $campusEnum->value]);
-                if (!$campus) {
-                    $this->addFlash('danger', "Campus inconnu.");
-                    return $this->render('utilisateur/inscription.html.twig', [
-                        'form' => $form->createView(),
-                    ]);
-                }
-                // Assigner l'entité Campus au participant
-                if (method_exists($participant, 'setCampus')) {
-                    $participant->setCampus($campus);
-                }
-            }
+            // Le campus est maintenant directement assigné par le formulaire
 
 
             $em->persist($participant);
