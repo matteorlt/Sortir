@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\Statut;
 use App\Repository\EtatRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -15,8 +16,9 @@ class Etat
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $libelle = null;
+    // On mappe la colonne sur l'enum Statut (backed enum string)
+    #[ORM\Column(enumType: Statut::class)]
+    private ?Statut $libelle = null;
 
     /**
      * @var Collection<int, Sortie>
@@ -34,15 +36,14 @@ class Etat
         return $this->id;
     }
 
-    public function getLibelle(): ?string
+    public function getLibelle(): ?Statut
     {
         return $this->libelle;
     }
 
-    public function setLibelle(string $libelle): static
+    public function setLibelle(Statut $libelle): static
     {
         $this->libelle = $libelle;
-
         return $this;
     }
 
@@ -67,12 +68,16 @@ class Etat
     public function removeSorty(Sortie $sorty): static
     {
         if ($this->sorties->removeElement($sorty)) {
-            // set the owning side to null (unless already changed)
             if ($sorty->getEtat() === $this) {
                 $sorty->setEtat(null);
             }
         }
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->libelle?->value ?? '';
     }
 }
