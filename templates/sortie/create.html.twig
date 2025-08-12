@@ -1,0 +1,124 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer une sortie{% endblock %}
+
+{% block body %}
+    <h1>Créer une sortie</h1>
+
+    {{ form_start(sortieForm) }}
+        {{ form_row(sortieForm.nomSortie) }}
+        {{ form_row(sortieForm.dateDebut) }}
+        {{ form_row(sortieForm.duree) }}
+        {{ form_row(sortieForm.dateCloture) }}
+        {{ form_row(sortieForm.nbInscriptionMax) }}
+        {{ form_row(sortieForm.descriptionInfos) }}
+
+        {# Champ adresse avec suggestions #}
+        <div style="position: relative;">
+            {{ form_row(sortieForm.adresse) }}
+            <ul id="adresse-suggestions"
+                style="position:absolute; z-index:1000; background:white; border:1px solid #ccc; width:100%; list-style:none; margin:0; padding:0; display:none;"></ul>
+        </div>
+
+        {# Champs cachés #}
+        {{ form_widget(sortieForm.adresse_full) }}
+        {{ form_widget(sortieForm.rue) }}
+        {{ form_widget(sortieForm.latitude) }}
+        {{ form_widget(sortieForm.longitude) }}
+        {{ form_widget(sortieForm.ville_nom) }}
+        {{ form_widget(sortieForm.code_postal) }}
+
+        {{ form_row(sortieForm.statut) }}
+        {{ form_row(sortieForm.campus) }}
+
+        <button type="submit" class="btn btn-primary">Envoyer</button>
+    {{ form_end(sortieForm) }}
+
+    <script>
+        (function() {
+            const input = document.querySelector('[data-address-input="true"]');
+            const list = document.getElementById('adresse-suggestions');
+
+            if (!input || !list) return;
+
+            let controller;
+
+            function clearSuggestions() {
+                list.innerHTML = '';
+                list.style.display = 'none';
+            }
+
+            function selectFeature(f) {
+                // API Adresse: lon,lat
+                const [lon, lat] = f.geometry.coordinates;
+                const props = f.properties;
+
+                // Récupération des champs du formulaire
+                const form = input.closest('form');
+                form.querySelector('[name$="[adresse_full]"]').value = props.label || '';
+                form.querySelector('[name$="[rue]"]').value = props.name || props.street || props.label || '';
+                form.querySelector('[name$="[latitude]"]').value = lat || '';
+                form.querySelector('[name$="[longitude]"]').value = lon || '';
+                form.querySelector('[name$="[ville_nom]"]').value = props.city || props.name || '';
+                form.querySelector('[name$="[code_postal]"]').value = props.postcode || '';
+
+                // Affiche le choix dans l'input principal
+                input.value = props.label || '';
+                clearSuggestions();
+            }
+
+            async function fetchSuggestions(q) {
+                const url = 'https://api-adresse.data.gouv.fr/search/?q=' + encodeURIComponent(q) + '&limit=5';
+                if (controller) controller.abort();
+                controller = new AbortController();
+                const resp = await fetch(url, { signal: controller.signal });
+                if (!resp.ok) return [];
+                const data = await resp.json();
+                return data.features || [];
+            }
+
+            function renderSuggestions(features) {
+                clearSuggestions();
+                if (!features.length) return;
+
+                features.forEach(f => {
+                    const li = document.createElement('li');
+                    li.textContent = f.properties.label;
+                    li.style.padding = '6px 8px';
+                    li.style.cursor = 'pointer';
+                    li.addEventListener('mousedown', e => {
+                        e.preventDefault();
+                        selectFeature(f);
+                    });
+                    li.addEventListener('mouseenter', () => li.style.background = '#f2f2f2');
+                    li.addEventListener('mouseleave', () => li.style.background = 'transparent');
+                    list.appendChild(li);
+                });
+
+                list.style.display = 'block';
+            }
+
+            let debounce;
+            input.addEventListener('input', async () => {
+                const q = input.value.trim();
+                if (!q) {
+                    clearSuggestions();
+                    return;
+                }
+                clearTimeout(debounce);
+                debounce = setTimeout(async () => {
+                    try {
+                        const features = await fetchSuggestions(q);
+                        renderSuggestions(features);
+                    } catch (_) { /* ignore */ }
+                }, 250);
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!list.contains(e.target) && e.target !== input) {
+                    clearSuggestions();
+                }
+            });
+        })();
+    </script>
+{% endblock %}
