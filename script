@@ -1,0 +1,66 @@
+CREATE TABLE Campus (
+    idCampus INT PRIMARY KEY AUTO_INCREMENT,
+    nomCampus VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE Participant (
+    idParticipant INT PRIMARY KEY AUTO_INCREMENT,
+    pseudo VARCHAR(100) NOT NULL,
+    nom VARCHAR(100) NOT NULL,
+    prenom VARCHAR(100) NOT NULL,
+    telephone VARCHAR(20),
+    mail VARCHAR(255) NOT NULL UNIQUE,
+    motDePasse VARCHAR(255) NOT NULL,
+    actif BOOLEAN DEFAULT TRUE,
+    photo VARCHAR(255),
+    idCampus INT,
+    FOREIGN KEY (idCampus) REFERENCES Campus(idCampus)
+);
+
+CREATE TABLE Etat (
+    idEtat INT PRIMARY KEY AUTO_INCREMENT,
+    libelle VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE Ville (
+    idVille INT PRIMARY KEY AUTO_INCREMENT,
+    nomVille VARCHAR(255) NOT NULL,
+    codePostal VARCHAR(10) NOT NULL
+);
+
+CREATE TABLE Lieu (
+    idLieu INT PRIMARY KEY AUTO_INCREMENT,
+    nomLieu VARCHAR(255) NOT NULL,
+    rue VARCHAR(255),
+    latitude FLOAT,
+    longitude FLOAT,
+    idVille INT,
+    FOREIGN KEY (idVille) REFERENCES Ville(idVille)
+);
+
+CREATE TABLE Sortie (
+    idSortie INT PRIMARY KEY AUTO_INCREMENT,
+    nom VARCHAR(255) NOT NULL,
+    dateDebut DATETIME NOT NULL,
+    duree INT,
+    dateCloture DATETIME NOT NULL,
+    nbInscriptionsMax INT,
+    descriptionInfos TEXT,
+    idEtat INT,
+    idLieu INT,
+    idCampus INT,
+    idOrganisateur INT,
+    FOREIGN KEY (idEtat) REFERENCES Etat(idEtat),
+    FOREIGN KEY (idLieu) REFERENCES Lieu(idLieu),
+    FOREIGN KEY (idCampus) REFERENCES Campus(idCampus),
+    FOREIGN KEY (idOrganisateur) REFERENCES Participant(idParticipant)
+);
+
+CREATE TABLE Inscription (
+    idInscription INT PRIMARY KEY AUTO_INCREMENT,
+    dateInscription DATE NOT NULL,
+    idParticipant INT,
+    idSortie INT,
+    FOREIGN KEY (idParticipant) REFERENCES Participant(idParticipant),
+    FOREIGN KEY (idSortie) REFERENCES Sortie(idSortie)
+);
