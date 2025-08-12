@@ -4,7 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Participant;
 use App\Enum\CampusEnum;
-use App\Form\ParticipantType;
+use App\Repository\CampusRepository;
+use App\Form\InscriptionType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -31,7 +32,7 @@ final class UtilisateurController extends AbstractController
     ): Response
     {
         $participant = new Participant();
-        $form = $this->createForm(ParticipantType::class, $participant);
+        $form = $this->createForm(InscriptionType::class, $participant);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
