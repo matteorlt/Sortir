@@ -2,41 +2,95 @@
 
 namespace App\Controller;
 
-use App\Entity\Participant; // Importation de l'entité Participant
-use App\Form\InscriptionType; // Importation du formulaire InscriptionFormType
-use Doctrine\ORM\EntityManagerInterface; // Interface pour interagir avec la base de données
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController; // Classe de base pour les contrôleurs Symfony
-use Symfony\Component\HttpFoundation\Request; // Classe pour gérer les requêtes HTTP
-use Symfony\Component\HttpFoundation\Response; // Classe pour gérer les réponses HTTP
-use Symfony\Component\Routing\Annotation\Route; // Annotation pour définir les routes
-#[Route('/utilisateur', name: 'utilisateur_')]
+use App\Entity\Participant;
+use App\Enum\CampusEnum;
+use App\Repository\CampusRepository;
+use App\Form\InscriptionType;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Routing\Attribute\Route;
+
 final class UtilisateurController extends AbstractController
 {
-    #[Route('/inscription', name: 'inscription', methods: ['GET', 'POST'])]
-    public function create(Request $request, EntityManagerInterface $em): Response
+    #[Route('/utilisateur', name: 'app_utilisateur')]
+    public function index(): Response
     {
-        // Création d'une nouvelle instance de Participant
+        return $this->render('utilisateur/index.html.twig', [
+            'controller_name' => 'UtilisateurController',
+        ]);
+    }
+
+    #[Route('/utilisateur/inscription', name: 'app_utilisateur_inscription')]
+    public function inscription(
+        Request $request,
+        EntityManagerInterface $em,
+        UserPasswordHasherInterface $passwordHasher
+    ): Response
+    {
         $participant = new Participant();
-
-        // Création du formulaire basé sur le type InscriptionFormType et l'entité Participant
         $form = $this->createForm(InscriptionType::class, $participant);
-
-        // Traitement de la requête HTTP pour le formulaire
         $form->handleRequest($request);
 
-        // Vérification si le formulaire a été soumis et est valide
         if ($form->isSubmitted() && $form->isValid()) {
-            // Persistance de l'entité Participant dans la base de données
+            // Mot de passe
+            $plainPassword = (string) $form->get('plainPassword')->getData();
+            $hashed = $passwordHasher->hashPassword($participant, $plainPassword);
+            $participant->setMotDePasse($hashed);
+
+
+            // Activer par défaut
+            if (method_exists($participant, 'setActif')) {
+                $participant->setActif(true);
+            }
+
+            // Upload photo (optionnel)
+            $photoFile = $form->get('photoFile')->getData();
+            if ($photoFile) {
+                $newName = uniqid('pp_', true).'.'.$photoFile->guessExtension();
+                try {
+                    $photoFile->move($this->getParameter('kernel.project_dir').'/public/uploads/photos', $newName);
+                    if (method_exists($participant, 'setPhoto')) {
+                        $participant->setPhoto($newName);
+                    }
+                } catch (FileException $e) {
+                    $this->addFlash('danger', "Échec de l'upload de la photo.");
+                    return $this->render('utilisateur/inscription.html.twig', [
+                        'form' => $form->createView(),
+                    ]);
+                }
+            }
+
+            // Conversion de l'enum CampusEnum -> entité Campus
+            /** @var CampusEnum|null $campusEnum */
+            $campusEnum = $form->get('campus')->getData();
+            if ($campusEnum) {
+                $campus = $campusRepository->findOneBy(['nomCampus' => $campusEnum->value]);
+                if (!$campus) {
+                    $this->addFlash('danger', "Campus inconnu.");
+                    return $this->render('utilisateur/inscription.html.twig', [
+                        'form' => $form->createView(),
+                    ]);
+                }
+                // Assigner l'entité Campus au participant
+                if (method_exists($participant, 'setCampus')) {
+                    $participant->setCampus($campus);
+                }
+            }
+
+
             $em->persist($participant);
             $em->flush();
 
-            // Redirection vers la page de confirmation ou une autre page après l'inscription
-            return $this->redirectToRoute('utilisateur');
+            $this->addFlash('success', 'Compte créé avec succès !');
+            return $this->redirectToRoute('app_utilisateur');
         }
 
-        // Rendu du formulaire dans la vue inscription.html.twig
         return $this->render('utilisateur/inscription.html.twig', [
-            'form' => $form->createView(), // Passage de la vue du formulaire à la vue Twig
+            'form' => $form->createView(),
         ]);
     }
 }
