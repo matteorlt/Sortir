@@ -14,23 +14,18 @@ use App\Repository\LieuRepository;
 use App\Repository\CampusRepository;
 use App\Repository\SortieRepository;
 use App\Repository\VilleRepository;
+use App\Service\SortieService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+#[Route('/sortie', name: 'sortie_')]
 final class SortieController extends AbstractController
 {
-    #[Route('/sortie', name: 'app_sortie')]
-    public function index(): Response
-    {
-        return $this->render('sortie/index.html.twig', [
-            'controller_name' => 'SortieController',
-        ]);
-    }
 
-    #[Route('/sortie/create', name: 'app_sortie_create')]
+    #[Route('/create', name: 'create')]
     public function create(
         Request $request,
         EntityManagerInterface $em,
@@ -116,13 +111,23 @@ final class SortieController extends AbstractController
         ]);
     }
 
-    #[Route('/sortie/list', name: 'app_list')]
+    #[Route('/list', name: 'list', methods: ['GET'])]
     public function list(SortieService $sortieService): Response
     {
-        $sorties = $sortieService->findAll(); // récupère toutes les sorties
+        $sorties = $sortieService->getPublishedSorties();
 
         return $this->render('sortie/list.html.twig', [
             'sorties' => $sorties,
+        ]);
+    }
+
+    #[Route('/{id}', name: 'show')]
+    public function show(int $id, SortieService $sortieService): Response
+    {
+        $sortie = $sortieService->getSortieDetails($id);
+
+        return $this->render('sortie/show.html.twig', [
+            'sortie' => $sortie,
         ]);
     }
 }

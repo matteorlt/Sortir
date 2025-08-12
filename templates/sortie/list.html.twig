@@ -3,26 +3,30 @@
 {% block title %}Liste des Sorties | {{ parent() }}{% endblock %}
 
 {% block body %}
-    <h1>Liste des sorties</h1>
+    <div class="container py-4">
+        <h1 class="mb-4 text-center">Liste des sorties</h1>
 
-    <div class="row">
-        {% for s in sorties %}
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <div class="card-body d-flex flex-column">
-                        <p class="card-text"><strong>Nom :</strong>{{ s.nomSortie }}</p>
-                        <p class="card-text"><strong>Date de début :</strong> {{ s.dateDebut ? s.dateDebut|date('d/m/Y H:i') : 'N/A' }}</p>
-                        <p class="card-text"><strong>Durée :</strong> {{ s.duree }} heures</p>
-                        <p class="card-text"><strong>Date de clôture :</strong> {{ s.dateCloture ? s.dateCloture|date('d/m/Y') : 'N/A' }}</p>
-                        <p class="card-text"><strong>Max participants :</strong> {{ s.nbInscriptionMax }}</p>
-                        <p class="card-text"><strong>Adresse :</strong> {{ s.lieu.nomLieu }}</p>
-{#                      <p class="card-text">{{ s.descriptionInfos }}</p>#}
-{#                      <a href="{{ path('sortie_show', {'id': s.id}) }}" class="btn btn-primary mt-auto align-self-start">Détail</a>#}
+        <div class="row g-4"> {# g-4 ajoute un espacement entre colonnes et lignes #}
+            {% for s in sorties %}
+                <div class="col-md-6">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="card-title mb-0">{{ s.nomSortie }}</h5>
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <p class="card-text"><strong>Date de début :</strong> {{ s.dateDebut ? s.dateDebut|date('d/m/Y H:i') : 'N/A' }}</p>
+                            <p class="card-text"><strong>Durée :</strong> {{ s.duree }} heures</p>
+                            <p class="card-text"><strong>Date de clôture :</strong> {{ s.dateCloture ? s.dateCloture|date('d/m/Y') : 'N/A' }}</p>
+                            <p class="card-text"><strong>Max participants :</strong> {{ s.nbInscriptionMax }}</p>
+                            <p class="card-text"><strong>Adresse :</strong> {{ s.lieu.nomLieu }}</p>
+                            {# <p class="card-text mt-2">{{ s.descriptionInfos }}</p> #}
+                            <a href="{{ path('sortie_show', {'id': s.id}) }}" class="btn btn-outline-primary mt-auto align-self-start">Détails</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        {% else %}
-            <p>Aucune sortie trouvée.</p>
-        {% endfor %}
+            {% else %}
+                <p class="text-center">Aucune sortie trouvée.</p>
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}

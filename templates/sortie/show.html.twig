@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Détail de la sortie | {{ sortie.nomSortie }}
+{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-lg">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="mb-0">{{ sortie.nomSortie }}</h2>
+                    </div>
+                    <div class="card-body">
+                        <dl class="row">
+                            <dt class="col-sm-4">Date de début :</dt>
+                            <dd class="col-sm-8">{{ sortie.dateDebut ? sortie.dateDebut|date('d/m/Y H:i') : 'N/A' }}</dd>
+
+                            <dt class="col-sm-4">Durée :</dt>
+                            <dd class="col-sm-8">{{ sortie.duree }} heures</dd>
+
+                            <dt class="col-sm-4">Date de clôture :</dt>
+                            <dd class="col-sm-8">{{ sortie.dateCloture ? sortie.dateCloture|date('d/m/Y') : 'N/A' }}</dd>
+
+                            <dt class="col-sm-4">Max participants :</dt>
+                            <dd class="col-sm-8">{{ sortie.nbInscriptionMax }}</dd>
+
+                            <dt class="col-sm-4">Description :</dt>
+                            <dd class="col-sm-8">{{ sortie.descriptionInfos }}</dd>
+
+                            <dt class="col-sm-4">Lieu :</dt>
+                            <dd class="col-sm-8">{{ sortie.lieu.nomLieu }}</dd>
+
+                            <dt class="col-sm-4">Rue :</dt>
+                            <dd class="col-sm-8">{{ sortie.lieu.rue }}</dd>
+
+                            <dt class="col-sm-4">Ville :</dt>
+                            <dd class="col-sm-8">
+                                {{ sortie.lieu.ville.nomVille }} ({{ sortie.lieu.ville.codePostal }})
+                            </dd>
+
+                            <dt class="col-sm-4">Coordonnées GPS :</dt>
+                            <dd class="col-sm-8">
+                                {{ sortie.lieu.latitude }}, {{ sortie.lieu.longitude }}
+                            </dd>
+
+                            <dt class="col-sm-4">État :</dt>
+                            <dd class="col-sm-8">{{ sortie.etat.libelle.value }}</dd>
+
+                            <dt class="col-sm-4">Campus :</dt>
+                            <dd class="col-sm-8">
+                                {{ sortie.campus }}
+                            </dd>
+                    </div>
+                    <div class="card-footer text-end">
+                        <a href="{{ path('sortie_list') }}" class="btn btn-secondary">← Retour à la liste</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
