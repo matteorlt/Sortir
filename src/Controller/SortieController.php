@@ -12,6 +12,7 @@ use App\Form\SortieType;
 use App\Repository\EtatRepository;
 use App\Repository\LieuRepository;
 use App\Repository\CampusRepository;
+use App\Repository\SortieRepository;
 use App\Repository\VilleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -112,6 +113,16 @@ final class SortieController extends AbstractController
 
         return $this->render('sortie/create.html.twig', [
             'sortieForm' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/sortie/list', name: 'app_list')]
+    public function list(SortieService $sortieService): Response
+    {
+        $sorties = $sortieService->findAll(); // récupère toutes les sorties
+
+        return $this->render('sortie/list.html.twig', [
+            'sorties' => $sorties,
         ]);
     }
 }
