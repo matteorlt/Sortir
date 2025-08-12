@@ -3,6 +3,9 @@
 {% block title %}Créer une sortie{% endblock %}
 
 {% block body %}
+
+    {% include 'components/_header.html.twig' %}
+
     <h1>Créer une sortie</h1>
 
     {{ form_start(sortieForm) }}
@@ -121,4 +124,7 @@
             });
         })();
     </script>
+
+    {% include 'components/_footer.html.twig' %}
+
 {% endblock %}

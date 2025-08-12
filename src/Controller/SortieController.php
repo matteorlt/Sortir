@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/sortie', name: 'sortie_')]
+#[Route('/sortie', name: 'app_sortie_')]
 final class SortieController extends AbstractController
 {
 

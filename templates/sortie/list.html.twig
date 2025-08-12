@@ -3,6 +3,9 @@
 {% block title %}Liste des Sorties | {{ parent() }}{% endblock %}
 
 {% block body %}
+
+    {% include 'components/_header.html.twig' %}
+
     <div class="container py-4">
         <h1 class="mb-4 text-center">Liste des sorties</h1>
 
@@ -29,4 +32,7 @@
             {% endfor %}
         </div>
     </div>
+
+    {% include 'components/_footer.html.twig' %}
+
 {% endblock %}

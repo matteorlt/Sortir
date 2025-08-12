@@ -26,6 +26,7 @@ final class UtilisateurController extends AbstractController
 
     #[Route('/utilisateur/inscription', name: 'app_utilisateur_inscription')]
     public function inscription(
+        CampusRepository $campusRepository,
         Request $request,
         EntityManagerInterface $em,
         UserPasswordHasherInterface $passwordHasher
