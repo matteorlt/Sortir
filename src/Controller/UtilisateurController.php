@@ -71,7 +71,7 @@ final class UtilisateurController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Compte créé avec succès !');
-            return $this->redirectToRoute('app_utilisateur');
+            return $this->redirectToRoute('app_home');
         }
 
         return $this->render('utilisateur/inscription.html.twig', [

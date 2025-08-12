@@ -6,36 +6,95 @@
 
     {% include 'components/_header.html.twig' %}
 
-    <h1>Créer une sortie</h1>
+    <div class="form-container">
+        <h1 class="form-title">Créer une sortie</h1>
+        
+        <div class="form-card">
+            {{ form_start(sortieForm, {'attr': {'class': 'space-y-6'}}) }}
+                
+                <div class="form-group">
+                    {{ form_label(sortieForm.nomSortie, null, {'label_attr': {'class': 'form-label form-required'}}) }}
+                    {{ form_widget(sortieForm.nomSortie, {'attr': {'class': 'form-input', 'placeholder': 'Ex: Soirée cinéma, Randonnée en forêt...'}}) }}
+                    {{ form_errors(sortieForm.nomSortie) }}
+                </div>
 
-    {{ form_start(sortieForm) }}
-        {{ form_row(sortieForm.nomSortie) }}
-        {{ form_row(sortieForm.dateDebut) }}
-        {{ form_row(sortieForm.duree) }}
-        {{ form_row(sortieForm.dateCloture) }}
-        {{ form_row(sortieForm.nbInscriptionMax) }}
-        {{ form_row(sortieForm.descriptionInfos) }}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="form-group">
+                        {{ form_label(sortieForm.dateDebut, null, {'label_attr': {'class': 'form-label form-required'}}) }}
+                        {{ form_widget(sortieForm.dateDebut, {'attr': {'class': 'form-input'}}) }}
+                        {{ form_errors(sortieForm.dateDebut) }}
+                    </div>
 
-        {# Champ adresse avec suggestions #}
-        <div style="position: relative;">
-            {{ form_row(sortieForm.adresse) }}
-            <ul id="adresse-suggestions"
-                style="position:absolute; z-index:1000; background:white; border:1px solid #ccc; width:100%; list-style:none; margin:0; padding:0; display:none;"></ul>
+                    <div class="form-group">
+                        {{ form_label(sortieForm.duree, null, {'label_attr': {'class': 'form-label form-required'}}) }}
+                        {{ form_widget(sortieForm.duree, {'attr': {'class': 'form-input', 'placeholder': 'Durée en minutes'}}) }}
+                        {{ form_errors(sortieForm.duree) }}
+                        <p class="form-help">Durée prévue de la sortie en minutes</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="form-group">
+                        {{ form_label(sortieForm.dateCloture, null, {'label_attr': {'class': 'form-label form-required'}}) }}
+                        {{ form_widget(sortieForm.dateCloture, {'attr': {'class': 'form-input'}}) }}
+                        {{ form_errors(sortieForm.dateCloture) }}
+                        <p class="form-help">Date limite pour s'inscrire</p>
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_label(sortieForm.nbInscriptionMax, null, {'label_attr': {'class': 'form-label form-required'}}) }}
+                        {{ form_widget(sortieForm.nbInscriptionMax, {'attr': {'class': 'form-input', 'placeholder': 'Nombre maximum de participants'}}) }}
+                        {{ form_errors(sortieForm.nbInscriptionMax) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(sortieForm.descriptionInfos, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(sortieForm.descriptionInfos, {'attr': {'class': 'form-textarea', 'placeholder': 'Décrivez votre sortie : lieu de rendez-vous, matériel à apporter, programme prévu...', 'rows': '4'}}) }}
+                    {{ form_errors(sortieForm.descriptionInfos) }}
+                </div>
+
+                {# Champ adresse avec suggestions stylé #}
+                <div class="form-group">
+                    <div style="position: relative;">
+                        {{ form_label(sortieForm.adresse, null, {'label_attr': {'class': 'form-label form-required'}}) }}
+                        {{ form_widget(sortieForm.adresse, {'attr': {'class': 'form-input', 'placeholder': 'Tapez l\'adresse du lieu de la sortie'}}) }}
+                        <ul id="adresse-suggestions" class="address-suggestions" style="display: none;"></ul>
+                        {{ form_errors(sortieForm.adresse) }}
+                        <p class="form-help">Commencez à taper pour voir les suggestions d'adresses</p>
+                    </div>
+                </div>
+
+                {# Champs cachés #}
+                {{ form_widget(sortieForm.adresse_full, {'attr': {'class': 'hidden'}}) }}
+                {{ form_widget(sortieForm.rue, {'attr': {'class': 'hidden'}}) }}
+                {{ form_widget(sortieForm.latitude, {'attr': {'class': 'hidden'}}) }}
+                {{ form_widget(sortieForm.longitude, {'attr': {'class': 'hidden'}}) }}
+                {{ form_widget(sortieForm.ville_nom, {'attr': {'class': 'hidden'}}) }}
+                {{ form_widget(sortieForm.code_postal, {'attr': {'class': 'hidden'}}) }}
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="form-group">
+                        {{ form_label(sortieForm.statut, null, {'label_attr': {'class': 'form-label form-required'}}) }}
+                        {{ form_widget(sortieForm.statut, {'attr': {'class': 'form-select'}}) }}
+                        {{ form_errors(sortieForm.statut) }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_label(sortieForm.campus, null, {'label_attr': {'class': 'form-label form-required'}}) }}
+                        {{ form_widget(sortieForm.campus, {'attr': {'class': 'form-select'}}) }}
+                        {{ form_errors(sortieForm.campus) }}
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Créer la sortie</button>
+                    <a href="{{ path('app_sortie_list') }}" class="btn-secondary">Annuler</a>
+                </div>
+                
+            {{ form_end(sortieForm) }}
         </div>
-
-        {# Champs cachés #}
-        {{ form_widget(sortieForm.adresse_full) }}
-        {{ form_widget(sortieForm.rue) }}
-        {{ form_widget(sortieForm.latitude) }}
-        {{ form_widget(sortieForm.longitude) }}
-        {{ form_widget(sortieForm.ville_nom) }}
-        {{ form_widget(sortieForm.code_postal) }}
-
-        {{ form_row(sortieForm.statut) }}
-        {{ form_row(sortieForm.campus) }}
-
-        <button type="submit" class="btn btn-primary">Envoyer</button>
-    {{ form_end(sortieForm) }}
+    </div>
 
     <script>
         (function() {
@@ -87,14 +146,11 @@
                 features.forEach(f => {
                     const li = document.createElement('li');
                     li.textContent = f.properties.label;
-                    li.style.padding = '6px 8px';
-                    li.style.cursor = 'pointer';
+                    li.className = 'address-suggestion-item';
                     li.addEventListener('mousedown', e => {
                         e.preventDefault();
                         selectFeature(f);
                     });
-                    li.addEventListener('mouseenter', () => li.style.background = '#f2f2f2');
-                    li.addEventListener('mouseleave', () => li.style.background = 'transparent');
                     list.appendChild(li);
                 });
 
