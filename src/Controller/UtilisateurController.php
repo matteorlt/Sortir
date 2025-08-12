@@ -28,7 +28,8 @@ final class UtilisateurController extends AbstractController
     public function inscription(
         Request $request,
         EntityManagerInterface $em,
-        UserPasswordHasherInterface $passwordHasher
+        UserPasswordHasherInterface $passwordHasher,
+        CampusRepository $campusRepository
     ): Response
     {
         $participant = new Participant();
@@ -40,7 +41,6 @@ final class UtilisateurController extends AbstractController
             $plainPassword = (string) $form->get('plainPassword')->getData();
             $hashed = $passwordHasher->hashPassword($participant, $plainPassword);
             $participant->setMotDePasse($hashed);
-
 
             // Activer par défaut
             if (method_exists($participant, 'setActif')) {
@@ -80,7 +80,6 @@ final class UtilisateurController extends AbstractController
                     $participant->setCampus($campus);
                 }
             }
-
 
             $em->persist($participant);
             $em->flush();
