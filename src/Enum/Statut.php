@@ -5,9 +5,9 @@ namespace App\Enum;
 
 enum Statut: string
 {
-    case EN_CREATION = 'en_creation';
+    case EN_CREATION = 'en creation';
     case OUVERT = 'ouvert';
     case FERME = 'ferme';
-    case EN_COURS = 'en_cours';
+    case EN_COURS = 'en cours';
     case ANNULE = 'annule';
 }
