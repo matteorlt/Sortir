@@ -25,11 +25,11 @@
 
                     <!-- Boutons d'action -->
                     <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors text-center">
+                        <a href="" class="bg-purple-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors text-center">
                             Découvrir les sorties
                         </a>
 
-                        <a href="" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors text-center">
+                        <a href="" class="bg-gray-400 text-white px-8 py-3 rounded-lg font-medium border-2 border-gray-400 hover:bg-white hover:border-purple-600 hover:text-black transition-colors text-center">
                             Créer une sortie
                         </a>
                     </div>
@@ -50,17 +50,16 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Section sans fond -->
             <div class="p-8">
-                <!-- Layout flex pour image à gauche et contenu à droite -->
-                <div class="flex flex-col lg:flex-row items-start gap-8">
-                    <!-- Image à gauche, agrandie et centrée -->
-                    <div class="flex-shrink-0 flex justify-center">
+                <div class="flex flex-col lg:flex-row items-start gap-20">
+                    <!-- Image à gauche avec plus d'espace -->
+                    <div class="flex-shrink-0 flex justify-start lg:w-96">
                         <img src="{{ asset('images/photo-reseaux-home.jpg') }}"
                              alt="Réseaux sociaux"
-                             class="w-96 h-auto rounded-lg">
+                             class="w-96 h-auto rounded-lg scale-150">
                     </div>
 
-                    <!-- Contenu à droite -->
-                    <div class="flex-1">
+                    <!-- Contenu à droite avec marge supplémentaire -->
+                    <div class="flex-1 lg:ml-12">
                         <!-- Titre de la section -->
                         <div class="mb-8">
                             <h2 class="text-3xl font-bold text-gray-900 mb-4">
@@ -76,9 +75,6 @@
 
                             <!-- Accessible partout -->
                             <div class="text-center md:text-left">
-                                <div class="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto md:mx-0 mb-3">
-                                    <i class="text-blue-500 text-xl fas fa-mobile-alt"></i>
-                                </div>
                                 <h3 class="text-lg font-semibold text-gray-900 mb-2">
                                     Accessible partout
                                 </h3>
@@ -89,9 +85,6 @@
 
                             <!-- Communauté ENI -->
                             <div class="text-center md:text-left">
-                                <div class="bg-green-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto md:mx-0 mb-3">
-                                    <i class="text-green-500 text-xl fas fa-users"></i>
-                                </div>
                                 <h3 class="text-lg font-semibold text-gray-900 mb-2">
                                     Communauté ENI
                                 </h3>
@@ -102,9 +95,6 @@
 
                             <!-- Organisation simplifiée -->
                             <div class="text-center md:text-left">
-                                <div class="bg-purple-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto md:mx-0 mb-3">
-                                    <i class="text-purple-500 text-xl fas fa-calendar"></i>
-                                </div>
                                 <h3 class="text-lg font-semibold text-gray-900 mb-2">
                                     Organisation simplifiée
                                 </h3>
@@ -115,9 +105,6 @@
 
                             <!-- Par campus -->
                             <div class="text-center md:text-left">
-                                <div class="bg-yellow-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto md:mx-0 mb-3">
-                                    <i class="text-yellow-500 text-xl fas fa-map-marker-alt"></i>
-                                </div>
                                 <h3 class="text-lg font-semibold text-gray-900 mb-2">
                                     Par campus
                                 </h3>
