@@ -21,7 +21,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-dark fw-medium px-3 py-2 rounded" href="{{ path('app_sortie_create') }}">
+                                        <a class="nav-link text-dark fw-medium px-3 py-2 rounded" href="{{ path('app_sortie_list') }}">
                         Sorties
                     </a>
                 </li>
@@ -60,13 +60,13 @@
                             <li><a class="dropdown-item" href="#"><i class="fas fa-calendar-alt me-2"></i>Mes sorties</a></li>
                             <li><a class="dropdown-item" href="#"><i class="fas fa-list me-2"></i>Mes inscriptions</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>Se déconnecter</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt me-2"></i>Se déconnecter</a></li>
                         </ul>
                     </div>
                 {% else %}
                     <!-- Utilisateur non connecté -->
                     <div class="d-flex gap-2">
-                        <a href="#" class="btn btn-outline-secondary btn-sm rounded-pill">
+                        <a href="{{ path('app_login') }}" class="btn btn-outline-secondary btn-sm rounded-pill">
                             Se connecter
                         </a>
                         <a href="{{ path('app_utilisateur_inscription') }}" class="btn btn-primary btn-sm rounded-pill">

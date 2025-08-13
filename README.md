@@ -45,10 +45,10 @@ composer install
 ```
 
 ### 3️⃣ Configurer l'environnement
-Copiez le fichier `.env.local` et adaptez les variables de connexion à votre base de données :
+Copiez le fichier `.env` vers `.env.local` et adaptez les variables de connexion à votre base de données :
 
 ```bash
-cp .env.local .env.local.local
+cp .env .env.local
 ```
 
 Exemple de configuration :

@@ -6,7 +6,6 @@ use App\Entity\Participant;
 use App\Repository\ParticipantRepository;
 use App\Service\PasswordResetTokenService;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -51,8 +50,11 @@ final class PasswordResetController extends AbstractController
         if ($user instanceof Participant) {
             $expiresAt = new \DateTimeImmutable('+1 hour');
             $token = $tokenService->generateToken($user, $expiresAt);
-            $resetUrl = $this->generateUrl('app_reset_password', ['token' => $token], 0);
-            $absoluteUrl = $request->getSchemeAndHttpHost() . $resetUrl;
+            $absoluteUrl = $this->generateUrl(
+                'app_reset_password',
+                ['token' => $token],
+                \Symfony\Component\Routing\Generator\UrlGeneratorInterface::ABSOLUTE_URL
+            );
 
             $message = (new Email())
                 ->from('no-reply@example.test')
