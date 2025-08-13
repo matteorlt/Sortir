@@ -77,6 +77,4 @@ class SortieService
 
         return true;
     }
-
-
 }
