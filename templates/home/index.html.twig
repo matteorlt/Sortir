@@ -31,7 +31,6 @@
                            style="background-color: #8f00ff; border-color: #8f00ff; transition: all 0.3s ease;"
                            onmouseover="this.style.backgroundColor='#7300cc'; this.style.borderColor='#7300cc';"
                            onmouseout="this.style.backgroundColor='#8f00ff'; this.style.borderColor='#8f00ff';">
-                        <a href="{{ path('app_sortie_list') }}" class="btn btn-primary btn-lg px-4 py-3 fw-medium">
                             Découvrir les sorties
                         </a>
 
@@ -39,7 +38,7 @@
                             <a href="{{ path('app_sortie_create') }}"
                                class="btn btn-outline-secondary btn-lg px-4 py-3 fw-medium"
                                style="transition: all 0.3s ease;"
-                               onmouseover="this.style.backgroundColor='#6c757d'; this.style.borderColor='#6c757d'; this.style.color='white'; "
+                               onmouseover="this.style.backgroundColor='#6c757d'; this.style.borderColor='#6c757d'; this.style.color='white';"
                                onmouseout="this.style.backgroundColor='transparent'; this.style.borderColor='#6c757d'; this.style.color='#6c757d';">
                                 Créer une sortie
                             </a>
@@ -49,12 +48,9 @@
                                style="transition: all 0.3s ease;"
                                onmouseover="this.style.backgroundColor='#6c757d'; this.style.borderColor='#6c757d'; this.style.color='white';"
                                onmouseout="this.style.backgroundColor='transparent'; this.style.borderColor='#6c757d'; this.style.color='#6c757d';">
-                                Se connecter
+                                Se connecter pour créer
                             </a>
                         {% endif %}
-                        <a href="{{ path('app_sortie_create') }}" class="btn btn-outline-secondary btn-lg px-4 py-3 fw-medium">
-                            Créer une sortie
-                        </a>
                     </div>
                 </div>
 
@@ -63,7 +59,7 @@
                     <img src="{{ asset('images/photo-amis-home.jpg') }}"
                          alt="Amis qui sortent ensemble"
                          class="img-fluid rounded"
-                         style="max-width: 600px;">
+                         style="max-width: 400px;">
                 </div>
             </div>
         </div>
@@ -79,7 +75,7 @@
                         <img src="{{ asset('images/photo-reseaux-home.jpg') }}"
                              alt="Réseaux sociaux"
                              class="img-fluid rounded"
-                             style="max-width: 600px;">
+                             style="max-width: 400px;">
                     </div>
 
                     <!-- Contenu à droite -->

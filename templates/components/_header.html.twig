@@ -47,8 +47,8 @@
                 {% if app.user %}
                     <!-- Utilisateur connecté -->
                     <div class="dropdown">
-                        <button class="btn btn-dark btn-sm rounded dropdown-toggle p-2"
-                                style="background-color: #8f00ff; border-color: #8f00ff"
+                        <button class="btn btn-sm rounded dropdown-toggle p-2"
+                                style="background-color: #8f00ff; border-color: #8f00ff; color: white;"
                                 type="button"
                                 id="userDropdown"
                                 data-bs-toggle="dropdown"
@@ -57,12 +57,9 @@
                         </button>
 
                         <ul class="dropdown-menu dropdown-menu-end shadow border" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Mon profil</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_utilisateur_profil') }}"><i class="fas fa-user me-2"></i>Mon profil</a></li>
                             <li><a class="dropdown-item" href="{{ path('app_sortie_list') }}"><i class="fas fa-calendar-alt me-2"></i>Mes sorties</a></li>
                             <li><a class="dropdown-item" href="{{ path('app_sortie_list') }}"><i class="fas fa-list me-2"></i>Mes inscriptions</a></li>
-                            <li><a class="dropdown-item" href="{{ path('app_utilisateur_profil') }}"><i class="fas fa-user me-2"></i>Mon profil</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-calendar-alt me-2"></i>Mes sorties</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-list me-2"></i>Mes inscriptions</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt me-2"></i>Se déconnecter</a></li>
                         </ul>
@@ -70,11 +67,11 @@
                 {% else %}
                     <!-- Utilisateur non connecté -->
                     <div class="d-flex gap-2">
-                        <a href="{{ path('app_login') }}" class="btn btn-outline-secondary btn-sm rounded-pill">
-                        <a href="{{ path('app_login') }}" class="btn btn-outline-secondary btn-sm rounded pr-3">
+                        <a href="{{ path('app_login') }}" class="btn btn-outline-secondary btn-sm rounded px-3">
                             Se connecter
                         </a>
-                        <a href="{{ path('app_utilisateur_inscription') }}" class="btn btn-primary btn-sm rounded"
+                        <a href="{{ path('app_utilisateur_inscription') }}"
+                           class="btn btn-primary btn-sm rounded px-3"
                            style="background-color: #8f00ff; border-color: #8f00ff; transition: all 0.3s ease;"
                            onmouseover="this.style.backgroundColor='#7300cc'; this.style.borderColor='#7300cc';"
                            onmouseout="this.style.backgroundColor='#8f00ff'; this.style.borderColor='#8f00ff';">
