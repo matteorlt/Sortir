@@ -8,110 +8,123 @@
     {% include 'components/_header.html.twig' %}
 
     <!-- Bannière principale (Hero section) -->
-    <section class="py-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+    <section class="py-5">
+        <div class="container">
+            <div class="row align-items-center g-5">
 
                 <!-- Contenu texte à gauche -->
-                <div class="order-2 lg:order-1">
+                <div class="col-lg-6 order-2 order-lg-1">
                     <!-- Titre principal -->
-                    <h1 class="text-5xl font-bold text-gray-900 mb-6">
+                    <h1 class="display-3 fw-bold text-dark mb-4">
                         Planifiez. Participez. Partagez.
                     </h1>
 
                     <!-- Sous-titre -->
-                    <p class="text-xl text-gray-600 mb-8">
+                    <p class="fs-5 text-muted mb-4">
                         La plateforme des sorties extra-scolaires pour les stagiaires ENI et anciens stagiaires.
                     </p>
 
                     <!-- Boutons d'action -->
-                    <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="" class="bg-purple-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors text-center">
+                    <div class="d-flex flex-column flex-sm-row gap-3">
+                        <a href="#" class="btn btn-primary btn-lg px-4 py-3 fw-medium">
                             Découvrir les sorties
                         </a>
 
-                        <a href="" class="bg-gray-400 text-white px-8 py-3 rounded-lg font-medium border-2 border-gray-400 hover:bg-white hover:border-purple-600 hover:text-black transition-colors text-center">
+                        <a href="#" class="btn btn-outline-secondary btn-lg px-4 py-3 fw-medium">
                             Créer une sortie
                         </a>
                     </div>
                 </div>
 
                 <!-- Image à droite -->
-                <div class="order-1 lg:order-2 flex justify-center lg:justify-end">
+                <div class="col-lg-6 order-1 order-lg-2 text-center text-lg-end">
                     <img src="{{ asset('images/photo-amis-home.jpg') }}"
                          alt="Amis qui sortent ensemble"
-                         class="w-96 h-auto rounded-lg scale-150">
+                         class="img-fluid rounded"
+                         style="max-width: 400px;">
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Section "Pourquoi Sortir.com ?" -->
-    <section class="py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Section sans fond -->
-            <div class="p-8">
-                <div class="flex flex-col lg:flex-row items-start gap-20">
-                    <!-- Image à gauche avec plus d'espace -->
-                    <div class="flex-shrink-0 flex justify-start lg:w-96">
+    <section>
+        <div class="container">
+            <div class="p-4">
+                <div class="row align-items-start g-5">
+                    <!-- Image à gauche -->
+                    <div class="col-lg-5">
                         <img src="{{ asset('images/photo-reseaux-home.jpg') }}"
                              alt="Réseaux sociaux"
-                             class="w-96 h-auto rounded-lg scale-150">
+                             class="img-fluid rounded"
+                             style="max-width: 400px;">
                     </div>
 
-                    <!-- Contenu à droite avec marge supplémentaire -->
-                    <div class="flex-1 lg:ml-12">
+                    <!-- Contenu à droite -->
+                    <div class="col-lg-7">
                         <!-- Titre de la section -->
-                        <div class="mb-8">
-                            <h2 class="text-3xl font-bold text-gray-900 mb-4">
+                        <div class="mb-5">
+                            <h2 class="h1 fw-bold text-dark mb-3">
                                 Pourquoi Sortir.com ?
                             </h2>
-                            <p class="text-lg text-gray-600">
+                            <p class="fs-5 text-muted">
                                 La solution complète pour organiser vos sorties entre stagiaires ENI
                             </p>
                         </div>
 
                         <!-- Grille des avantages -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="row g-4">
 
                             <!-- Accessible partout -->
-                            <div class="text-center md:text-left">
-                                <h3 class="text-lg font-semibold text-gray-900 mb-2">
-                                    Accessible partout
-                                </h3>
-                                <p class="text-gray-600">
-                                    Interface responsive, simple et mobile-friendly.
-                                </p>
+                            <div class="col-md-6">
+                                <div class="text-center text-md-start">
+                                    <h3 class="h5 fw-semibold text-dark mb-2">
+                                        <i class="fas fa-mobile-alt text-primary me-2"></i>
+                                        Accessible partout
+                                    </h3>
+                                    <p class="text-muted">
+                                        Interface responsive, simple et mobile-friendly.
+                                    </p>
+                                </div>
                             </div>
 
                             <!-- Communauté ENI -->
-                            <div class="text-center md:text-left">
-                                <h3 class="text-lg font-semibold text-gray-900 mb-2">
-                                    Communauté ENI
-                                </h3>
-                                <p class="text-gray-600">
-                                    Renforcez les liens avec d'autres stagiaires.
-                                </p>
+                            <div class="col-md-6">
+                                <div class="text-center text-md-start">
+                                    <h3 class="h5 fw-semibold text-dark mb-2">
+                                        <i class="fas fa-users text-primary me-2"></i>
+                                        Communauté ENI
+                                    </h3>
+                                    <p class="text-muted">
+                                        Renforcez les liens avec d'autres stagiaires.
+                                    </p>
+                                </div>
                             </div>
 
                             <!-- Organisation simplifiée -->
-                            <div class="text-center md:text-left">
-                                <h3 class="text-lg font-semibold text-gray-900 mb-2">
-                                    Organisation simplifiée
-                                </h3>
-                                <p class="text-gray-600">
-                                    Inscriptions et gestion 100% digitalisées.
-                                </p>
+                            <div class="col-md-6">
+                                <div class="text-center text-md-start">
+                                    <h3 class="h5 fw-semibold text-dark mb-2">
+                                        <i class="fas fa-cog text-primary me-2"></i>
+                                        Organisation simplifiée
+                                    </h3>
+                                    <p class="text-muted">
+                                        Inscriptions et gestion 100% digitalisées.
+                                    </p>
+                                </div>
                             </div>
 
                             <!-- Par campus -->
-                            <div class="text-center md:text-left">
-                                <h3 class="text-lg font-semibold text-gray-900 mb-2">
-                                    Par campus
-                                </h3>
-                                <p class="text-gray-600">
-                                    Trouvez les événements proches de vous.
-                                </p>
+                            <div class="col-md-6">
+                                <div class="text-center text-md-start">
+                                    <h3 class="h5 fw-semibold text-dark mb-2">
+                                        <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                                        Par campus
+                                    </h3>
+                                    <p class="text-muted">
+                                        Trouvez les événements proches de vous.
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
