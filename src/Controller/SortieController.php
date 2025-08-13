@@ -103,7 +103,7 @@ final class SortieController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'La sortie a bien été créée.');
-            return $this->redirectToRoute('app_sortie');
+            return $this->redirectToRoute('app_sortie_list');
         }
 
         return $this->render('sortie/create.html.twig', [
@@ -112,14 +112,22 @@ final class SortieController extends AbstractController
     }
 
     #[Route('/list', name: 'list', methods: ['GET'])]
-    public function list(SortieService $sortieService): Response
+    public function list(Request $request, SortieService $sortieService): Response
     {
-        $sorties = $sortieService->getPublishedSorties();
+        $sortDate = $request->query->get('sortDate');
+        $sortInscription = $request->query->get('sortInscription');
+        $campus = $request->query->get('campus');
+        $search = $request->query->get('search');
+        $categorie = $request->query->get('categorie');
+
+        $sorties = $sortieService->filterSorties($sortDate, $sortInscription, $campus, $search, $categorie);
 
         return $this->render('sortie/list.html.twig', [
             'sorties' => $sorties,
         ]);
     }
+
+
 
     #[Route('/{id}', name: 'show')]
     public function show(int $id, SortieService $sortieService): Response

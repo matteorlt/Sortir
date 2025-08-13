@@ -6,6 +6,7 @@ use App\Entity\Sortie;
 use App\Enum\Statut;
 use App\Enum\CampusEnum;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -52,6 +53,19 @@ final class SortieType extends AbstractType
                     'autocomplete' => 'off',
                     'data-address-input' => 'true',
                 ],
+            ])
+            ->add('categorie', ChoiceType::class, [
+                'choices' => [
+                    'Culture' => 'Culture',
+                    'Sport' => 'Sport',
+                    'Loisirs' => 'Loisirs',
+                    'Détente' => 'Détente',
+                    'Formation' => 'Formation',
+                    'Autre' => 'Autre',
+                ],
+                'required' => false,
+                'placeholder' => 'Sélectionner une catégorie',
+                'label' => 'Catégorie'
             ])
             // Champs cachés remplis par le JS après sélection
             ->add('adresse_full', HiddenType::class, ['mapped' => false])

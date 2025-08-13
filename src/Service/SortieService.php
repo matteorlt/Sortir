@@ -40,4 +40,10 @@ class SortieService
 
         return $sortie;
     }
+
+    public function filterSorties(?string $sortDate, ?string $sortInscription, ?string $campus, ?string $search, ?string $categorie): array
+    {
+        return $this->sortieRepository->findFiltered($sortDate, $sortInscription, $campus, $search, $categorie);
+    }
+
 }
