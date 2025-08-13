@@ -10,6 +10,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,15 +23,9 @@ use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use App\Form\CsvImportType;
 
+
 final class UtilisateurController extends AbstractController
 {
-    #[Route('/utilisateur', name: 'app_utilisateur')]
-    public function index(): Response
-    {
-        return $this->render('utilisateur/index.html.twig', [
-            'controller_name' => 'UtilisateurController',
-        ]);
-    }
 
     #[Route('/utilisateur/inscription', name: 'app_utilisateur_inscription')]
     public function inscription(
@@ -147,4 +144,65 @@ final class UtilisateurController extends AbstractController
             'utilisateur' => $this->getUser(),
         ]);
     }
+
+    #[Route('/profil/edit/password', name: 'app_utilisateur_edit_profil_password')]
+    public function profilEditPassword(
+        Request $request,
+        EntityManagerInterface $em,
+        UserPasswordHasherInterface $passwordHasher
+    ): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        /** @var Participant $user */
+        $user = $this->getUser();
+
+        // Formulaire de changement de mot de passe (correspond au template)
+        $form = $this->createFormBuilder()
+            ->add('currentPassword', PasswordType::class, [
+                'label' => 'Mot de passe actuel',
+                'mapped' => false,
+                'required' => true,
+                'attr' => ['autocomplete' => 'current-password'],
+            ])
+            ->add('newPassword', RepeatedType::class, [
+                'type' => PasswordType::class,
+                'mapped' => false,
+                'first_options'  => [
+                    'label' => 'Nouveau mot de passe',
+                    'attr' => ['autocomplete' => 'new-password'],
+                ],
+                'second_options' => [
+                    'label' => 'Confirmez le nouveau mot de passe',
+                    'attr' => ['autocomplete' => 'new-password'],
+                ],
+                'invalid_message' => 'Les mots de passe ne correspondent pas.',
+            ])
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $current = (string) $form->get('currentPassword')->getData();
+
+            if (!$passwordHasher->isPasswordValid($user, $current)) {
+                $form->get('currentPassword')->addError(new FormError('Mot de passe actuel invalide.'));
+            } else {
+                $new = (string) $form->get('newPassword')->getData();
+                $hashed = $passwordHasher->hashPassword($user, $new);
+                $user->setMotDePasse($hashed);
+
+                $em->flush();
+
+                $this->addFlash('success', 'Votre mot de passe a été mis à jour.');
+                return $this->redirectToRoute('app_utilisateur_profil');
+            }
+        }
+
+        return $this->render('utilisateur/edit_profil_password.html.twig', [
+            'utilisateur' => $user,
+            'form' => $form->createView(),
+        ]);
+    }
+
 }
