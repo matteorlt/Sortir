@@ -31,6 +31,7 @@
                            style="background-color: #8f00ff; border-color: #8f00ff; transition: all 0.3s ease;"
                            onmouseover="this.style.backgroundColor='#7300cc'; this.style.borderColor='#7300cc';"
                            onmouseout="this.style.backgroundColor='#8f00ff'; this.style.borderColor='#8f00ff';">
+                        <a href="{{ path('app_sortie_list') }}" class="btn btn-primary btn-lg px-4 py-3 fw-medium">
                             Découvrir les sorties
                         </a>
 
@@ -51,6 +52,9 @@
                                 Se connecter
                             </a>
                         {% endif %}
+                        <a href="{{ path('app_sortie_create') }}" class="btn btn-outline-secondary btn-lg px-4 py-3 fw-medium">
+                            Créer une sortie
+                        </a>
                     </div>
                 </div>
 

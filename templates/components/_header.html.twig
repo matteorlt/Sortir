@@ -57,6 +57,9 @@
                         </button>
 
                         <ul class="dropdown-menu dropdown-menu-end shadow border" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Mon profil</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_sortie_list') }}"><i class="fas fa-calendar-alt me-2"></i>Mes sorties</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_sortie_list') }}"><i class="fas fa-list me-2"></i>Mes inscriptions</a></li>
                             <li><a class="dropdown-item" href="{{ path('app_utilisateur_profil') }}"><i class="fas fa-user me-2"></i>Mon profil</a></li>
                             <li><a class="dropdown-item" href="#"><i class="fas fa-calendar-alt me-2"></i>Mes sorties</a></li>
                             <li><a class="dropdown-item" href="#"><i class="fas fa-list me-2"></i>Mes inscriptions</a></li>
@@ -67,6 +70,7 @@
                 {% else %}
                     <!-- Utilisateur non connecté -->
                     <div class="d-flex gap-2">
+                        <a href="{{ path('app_login') }}" class="btn btn-outline-secondary btn-sm rounded-pill">
                         <a href="{{ path('app_login') }}" class="btn btn-outline-secondary btn-sm rounded pr-3">
                             Se connecter
                         </a>

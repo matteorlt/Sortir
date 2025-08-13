@@ -41,8 +41,8 @@ final class InscriptionType extends AbstractType
             ->add('mail', EmailType::class, [
                 'label' => 'Email',
                 'constraints' => [
-                    new NotBlank(message: 'L’email est obligatoire.'),
-                    new Email(message: 'Veuillez saisir une adresse email valide.'),
+                    new NotBlank(message: 'L’emails est obligatoire.'),
+                    new Email(message: 'Veuillez saisir une adresse emails valide.'),
                     new Regex(
                         pattern: '/@campus-eni\.fr$/i',
                         message: 'Votre adresse doit se terminer par @campus-eni.fr.'
