@@ -137,4 +137,14 @@ final class UtilisateurController extends AbstractController
             'importForm' => $form->createView(),
         ]);
     }
+
+    #[Route('/profil', name: 'app_utilisateur_profil')]
+    public function profil(): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        return $this->render('utilisateur/profil.html.twig', [
+            'utilisateur' => $this->getUser(),
+        ]);
+    }
 }

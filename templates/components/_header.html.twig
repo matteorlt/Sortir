@@ -66,7 +66,7 @@
                 {% else %}
                     <!-- Utilisateur non connecté -->
                     <div class="d-flex gap-2">
-                        <a href="#" class="btn btn-outline-secondary btn-sm rounded-pill">
+                        <a href="{{ path('app_login') }}" class="btn btn-outline-secondary btn-sm rounded-pill">
                             Se connecter
                         </a>
                         <a href="{{ path('app_utilisateur_inscription') }}" class="btn btn-primary btn-sm rounded-pill">
