@@ -1,12 +1,35 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Inscription{% endblock %}
+{% block title %}Administration - Utilisateurs{% endblock %}
 
 {% block body %}
 
     {% include 'components/_header.html.twig' %}
 
 
+    <h1>Administration - Utilisateurs</h1>
+
+    {# Messages flash #}
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ type }}">{{ message }}</div>
+        {% endfor %}
+    {% endfor %}
+
+    <section>
+        <h2>Importer des utilisateurs via CSV</h2>
+        {{ form_start(importForm, { attr: { enctype: 'multipart/form-data' } }) }}
+        <div class="mb-3">
+            {{ form_row(importForm.file) }}
+        </div>
+        <div class="mb-3">
+            {{ form_row(importForm.separator) }}
+        </div>
+        <button class="btn btn-primary" type="submit">
+            Importer le CSV dans la base
+        </button>
+        {{ form_end(importForm) }}
+    </section>
 
 
 

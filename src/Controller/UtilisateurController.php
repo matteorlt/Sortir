@@ -12,6 +12,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Service\Importer\ParticipantCsvImporter;
+use App\Form\CsvImportType;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 final class UtilisateurController extends AbstractController
 {
@@ -79,11 +82,55 @@ final class UtilisateurController extends AbstractController
         ]);
     }
 
-    #[Route ('/utilisateur/admin', name: 'app_utilisateur_admin')]
-    public function admin(): Response
+    #[Route ('/utilisateur/admin', name: 'app_utilisateur_admin', methods: ['GET', 'POST'])]
+    public function admin(
+        Request $request,
+        ParticipantCsvImporter $importer
+    ): Response
     {
+        $form = $this->createForm(CsvImportType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var UploadedFile $uploaded */
+            $uploaded = $form->get('file')->getData();
+            $separator = (string) ($form->get('separator')->getData() ?: ';');
+
+            $targetDir = sys_get_temp_dir();
+            $targetName = 'participants_import_' . bin2hex(random_bytes(8)) . '.csv';
+            $targetPath = rtrim($targetDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $targetName;
+
+            try {
+                $uploaded->move($targetDir, $targetName);
+            } catch (FileException $e) {
+                $this->addFlash('danger', 'Erreur lors de la copie du fichier: ' . $e->getMessage());
+                return $this->render('utilisateur/admin.html.twig', [
+                    'controller_name' => 'UtilisateurController',
+                    'importForm' => $form->createView(),
+                ]);
+            }
+
+            try {
+                $result = $importer->import($targetPath, $separator);
+                @unlink($targetPath);
+
+                $this->addFlash('success', sprintf(
+                    'Import terminé: %d inséré(s), %d ignoré(s), %d erreur(s).',
+                    $result['inserted'] ?? 0,
+                    $result['skipped'] ?? 0,
+                    $result['errors'] ?? 0
+                ));
+
+                return $this->redirectToRoute('app_utilisateur_admin');
+            } catch (\Throwable $e) {
+                @unlink($targetPath);
+                $this->addFlash('danger', 'Erreur lors de l’import: ' . $e->getMessage());
+            }
+        }
+
         return $this->render('utilisateur/admin.html.twig', [
             'controller_name' => 'UtilisateurController',
+            'importForm' => $form->createView(),
         ]);
     }
 }
