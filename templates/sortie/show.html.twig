@@ -48,16 +48,19 @@
                                 {{ sortie.lieu.latitude }}, {{ sortie.lieu.longitude }}
                             </dd>
 
+                            <dt class="col-sm-4">Catégorie :</dt>
+                            <dd class="col-sm-8">{{ sortie.categorie }}</dd>
+
                             <dt class="col-sm-4">État :</dt>
                             <dd class="col-sm-8">{{ sortie.etat.libelle.value }}</dd>
 
                             <dt class="col-sm-4">Campus :</dt>
                             <dd class="col-sm-8">
-                                {{ sortie.campus }}
+                                {{ sortie.campus.nomCampus }}
                             </dd>
                     </div>
                     <div class="card-footer text-end">
-                        <a href="{{ path('sortie_list') }}" class="btn btn-secondary">← Retour à la liste</a>
+                        <a href="{{ path('app_sortie_list') }}" class="btn btn-secondary">← Retour à la liste</a>
                     </div>
                 </div>
             </div>

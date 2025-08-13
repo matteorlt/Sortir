@@ -87,7 +87,13 @@
                     </div>
                 </div>
 
-                <div class="form-actions">
+            <div class="form-group">
+                {{ form_label(sortieForm.categorie, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(sortieForm.categorie, {'attr': {'class': 'form-select'}}) }}
+                {{ form_errors(sortieForm.categorie) }}
+            </div>
+
+            <div class="form-actions">
                     <button type="submit" class="btn-primary">Créer la sortie</button>
                     <a href="{{ path('app_sortie_list') }}" class="btn-secondary">Annuler</a>
                 </div>

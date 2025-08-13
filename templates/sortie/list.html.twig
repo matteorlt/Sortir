@@ -9,6 +9,75 @@
     <div class="container py-4">
         <h1 class="mb-4 text-center">Liste des sorties</h1>
 
+
+        <form method="get" action="{{ path('app_sortie_list') }}" class="mb-4">
+            <div class="row g-3 align-items-end">
+
+                <div class="col-md-4">
+                    <label for="search" class="form-label">Nom de l'évènement</label>
+                    <input
+                            type="text"
+                            name="search"
+                            id="search"
+                            class="form-control"
+                            placeholder="Rechercher une sortie..."
+                            value="{{ app.request.get('search') }}"
+                    >
+                </div>
+
+                <div class="col-md-3">
+                    <label for="sortDate" class="form-label">Date</label>
+                    <select name="sortDate" id="sortDate" class="form-select">
+                        <option value="">-- Aucun tri --</option>
+                        <option value="asc" {% if app.request.get('sortDate') == 'asc' %}selected{% endif %}>Croissant
+                        </option>
+                        <option value="desc" {% if app.request.get('sortDate') == 'desc' %}selected{% endif %}>
+                            Décroissant
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label for="sortInscription" class="form-label">Nombre maximum d'inscrits</label>
+                    <select name="sortInscription" id="sortInscription" class="form-select">
+                        <option value="">-- Aucun tri --</option>
+                        <option value="asc" {% if app.request.get('sortInscription') == 'asc' %}selected{% endif %}>
+                            Croissant
+                        </option>
+                        <option value="desc" {% if app.request.get('sortInscription') == 'desc' %}selected{% endif %}>
+                            Décroissant
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label for="campus" class="form-label">Campus</label>
+                    <select name="campus" id="campus" class="form-select">
+                        <option value="">-- Tous les campus --</option>
+                        {% for c in ['Rennes', 'Niort', 'Nantes', 'Quimper'] %}
+                            <option value="{{ c }}"
+                                    {% if app.request.get('campus') == c %}selected{% endif %}>{{ c }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label for="categorie" class="form-label">Catégorie</label>
+                    <select name="categorie" id="categorie" class="form-select">
+                        <option value="">-- Toutes les catégories --</option>
+                        {% for cat in ['Culture', 'Sport', 'Loisirs', 'Détente', 'Formation', 'Autre'] %}
+                            <option value="{{ cat }}" {% if app.request.get('categorie') == cat %}selected{% endif %}>{{ cat }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-12 mt-3">
+                    <button type="submit" class="btn btn-primary">Filtrer</button>
+                </div>
+            </div>
+        </form>
+
+
         <div class="row g-4"> {# g-4 ajoute un espacement entre colonnes et lignes #}
             {% for s in sorties %}
                 <div class="col-md-6">
@@ -17,13 +86,16 @@
                             <h5 class="card-title mb-0">{{ s.nomSortie }}</h5>
                         </div>
                         <div class="card-body d-flex flex-column">
-                            <p class="card-text"><strong>Date de début :</strong> {{ s.dateDebut ? s.dateDebut|date('d/m/Y H:i') : 'N/A' }}</p>
+                            <p class="card-text"><strong>Date de début
+                                    :</strong> {{ s.dateDebut ? s.dateDebut|date('d/m/Y H:i') : 'N/A' }}</p>
                             <p class="card-text"><strong>Durée :</strong> {{ s.duree }} heures</p>
-                            <p class="card-text"><strong>Date de clôture :</strong> {{ s.dateCloture ? s.dateCloture|date('d/m/Y') : 'N/A' }}</p>
+                            <p class="card-text"><strong>Date de clôture
+                                    :</strong> {{ s.dateCloture ? s.dateCloture|date('d/m/Y') : 'N/A' }}</p>
                             <p class="card-text"><strong>Max participants :</strong> {{ s.nbInscriptionMax }}</p>
                             <p class="card-text"><strong>Adresse :</strong> {{ s.lieu.nomLieu }}</p>
-                            {# <p class="card-text mt-2">{{ s.descriptionInfos }}</p> #}
-                            <a href="{{ path('sortie_show', {'id': s.id}) }}" class="btn btn-outline-primary mt-auto align-self-start">Détails</a>
+                            <p class="card-text"><strong>Catégorie :</strong> {{ s.categorie }}</p>
+                            <a href="{{ path('app_sortie_show', {'id': s.id}) }}"
+                               class="btn btn-outline-primary mt-auto align-self-start">Détails</a>
                         </div>
                     </div>
                 </div>

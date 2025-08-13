@@ -16,6 +16,46 @@ class SortieRepository extends ServiceEntityRepository
         parent::__construct($registry, Sortie::class);
     }
 
+    /**
+     * Rangements des évènements dans l'ordre croissant
+     * @return Sortie[] Returns an array of Sortie objects
+     */
+
+    public function findFiltered(?string $sortDate, ?string $sortInscription, ?string $campus, ?string $search, ?string $categorie): array
+    {
+        $qb = $this->createQueryBuilder('s');
+
+        if ($campus) {
+            $qb->join('s.campus', 'c')
+                ->andWhere('c.nomCampus = :campus')
+                ->setParameter('campus', $campus);
+        }
+
+        if ($search) {
+            $qb->andWhere('s.nomSortie LIKE :search')
+                ->setParameter('search', '%' . $search . '%');
+        }
+
+        if ($categorie) {
+            $qb->andWhere('s.categorie = :categorie')
+                ->setParameter('categorie', $categorie);
+        }
+
+        // Tri
+        if ($sortDate) {
+            $qb->addOrderBy('s.dateDebut', strtoupper($sortDate) === 'DESC' ? 'DESC' : 'ASC');
+        }
+
+        if ($sortInscription) {
+            $qb->addOrderBy('s.nbInscriptionMax', strtoupper($sortInscription) === 'DESC' ? 'DESC' : 'ASC');
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+
+
+
 //    /**
 //     * @return Sortie[] Returns an array of Sortie objects
 //     */
