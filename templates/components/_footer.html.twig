@@ -1,24 +1,24 @@
 {# templates/components/_footer.html.twig #}
-<footer class="bg-white border-t border-gray-200">
-    <div class="max-w-6xl mx-auto px-4 py-12">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<footer class="bg-white border-top">
+    <div class="container py-5">
+        <div class="row g-4">
 
             <!-- Liens utiles -->
-            <div>
-                <h4 class="text-lg font-semibold text-gray-900 mb-4">Liens utiles</h4>
-                <ul class="space-y-2">
-                    <li>
-                        <a href="" class="text-gray-600 hover:text-gray-900">
+            <div class="col-md-4">
+                <h4 class="h5 fw-semibold text-dark mb-3">Liens utiles</h4>
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <a href="#" class="text-muted text-decoration-none">
                             Mentions légales
                         </a>
                     </li>
-                    <li>
-                        <a href="" class="text-gray-600 hover:text-gray-900">
+                    <li class="mb-2">
+                        <a href="#" class="text-muted text-decoration-none">
                             Politique de confidentialité
                         </a>
                     </li>
-                    <li>
-                        <a href="" class="text-gray-600 hover:text-gray-900">
+                    <li class="mb-2">
+                        <a href="#" class="text-muted text-decoration-none">
                             Contact BDE
                         </a>
                     </li>
@@ -26,27 +26,27 @@
             </div>
 
             <!-- Réseaux sociaux -->
-            <div>
-                <h4 class="text-lg font-semibold text-gray-900 mb-4">Suivez-nous</h4>
-                <div class="flex space-x-4">
-                    <a href="#" aria-label="Facebook" class="text-gray-600 hover:text-blue-600">
-                        <span class="text-sm">Facebook</span>
+            <div class="col-md-4">
+                <h4 class="h5 fw-semibold text-dark mb-3">Suivez-nous</h4>
+                <div class="d-flex gap-3">
+                    <a href="#" aria-label="Facebook" class="text-muted text-decoration-none">
+                        <span class="small">Facebook</span>
                     </a>
-                    <a href="#" aria-label="Instagram" class="text-gray-600 hover:text-pink-600">
-                        <span class="text-sm">Instagram</span>
+                    <a href="#" aria-label="Instagram" class="text-muted text-decoration-none">
+                        <span class="small">Instagram</span>
                     </a>
-                    <a href="#" aria-label="Twitter" class="text-gray-600 hover:text-blue-400">
-                        <span class="text-sm">Twitter</span>
+                    <a href="#" aria-label="Twitter" class="text-muted text-decoration-none">
+                        <span class="small">Twitter</span>
                     </a>
                 </div>
             </div>
 
             <!-- Logo ENI + Copyright -->
-            <div class="text-center md:text-right">
-                <div class="flex items-center justify-center md:justify-end mb-4">
-                    <span class="text-gray-700 font-medium">ENI École Informatique</span>
+            <div class="col-md-4 text-center text-md-end">
+                <div class="d-flex align-items-center justify-content-center justify-content-md-end mb-3">
+                    <span class="text-dark fw-medium">ENI École Informatique</span>
                 </div>
-                <p class="text-gray-600 text-sm">&copy; Sortir.com - {{ 'now'|date('Y') }}</p>
+                <p class="text-muted small mb-0">&copy; Sortir.com - {{ 'now'|date('Y') }}</p>
             </div>
         </div>
     </div>

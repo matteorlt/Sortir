@@ -6,83 +6,102 @@
 
     {% include 'components/_header.html.twig' %}
 
-    <div class="form-container">
-        <h1 class="form-title">Créer un compte</h1>
-        
-        <div class="form-card">
-            {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
-                
-                <div class="form-group">
-                    {{ form_label(form.pseudo, null, {'label_attr': {'class': 'form-label form-required'}}) }}
-                    {{ form_widget(form.pseudo, {'attr': {'class': 'form-input', 'placeholder': 'Votre nom d\'utilisateur'}}) }}
-                    {{ form_errors(form.pseudo) }}
-                    <p class="form-help">Ce nom sera visible par les autres utilisateurs</p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="form-group">
-                        {{ form_label(form.nom, null, {'label_attr': {'class': 'form-label form-required'}}) }}
-                        {{ form_widget(form.nom, {'attr': {'class': 'form-input', 'placeholder': 'Votre nom de famille'}}) }}
-                        {{ form_errors(form.nom) }}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h1 class="h3 mb-0">Créer un compte</h1>
                     </div>
 
-                    <div class="form-group">
-                        {{ form_label(form.prenom, null, {'label_attr': {'class': 'form-label form-required'}}) }}
-                        {{ form_widget(form.prenom, {'attr': {'class': 'form-input', 'placeholder': 'Votre prénom'}}) }}
-                        {{ form_errors(form.prenom) }}
+                    <div class="card-body p-4">
+                        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+                        <div class="mb-4">
+                            {{ form_label(form.pseudo, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                            <span class="text-danger">*</span>
+                            {{ form_widget(form.pseudo, {'attr': {'class': 'form-control', 'placeholder': 'Votre nom d\'utilisateur'}}) }}
+                            {{ form_errors(form.pseudo) }}
+                            <div class="form-text">Ce nom sera visible par les autres utilisateurs</div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                {{ form_label(form.nom, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                                <span class="text-danger">*</span>
+                                {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'placeholder': 'Votre nom de famille'}}) }}
+                                {{ form_errors(form.nom) }}
+                            </div>
+
+                            <div class="col-md-6">
+                                {{ form_label(form.prenom, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                                <span class="text-danger">*</span>
+                                {{ form_widget(form.prenom, {'attr': {'class': 'form-control', 'placeholder': 'Votre prénom'}}) }}
+                                {{ form_errors(form.prenom) }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                {{ form_label(form.telephone, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                                {{ form_widget(form.telephone, {'attr': {'class': 'form-control', 'placeholder': '06 12 34 56 78'}}) }}
+                                {{ form_errors(form.telephone) }}
+                                <div class="form-text">Optionnel - pour être contacté par les organisateurs</div>
+                            </div>
+
+                            <div class="col-md-6">
+                                {{ form_label(form.mail, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                                <span class="text-danger">*</span>
+                                {{ form_widget(form.mail, {'attr': {'class': 'form-control', 'placeholder': 'votre.email@eni.fr'}}) }}
+                                {{ form_errors(form.mail) }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                {{ form_label(form.plainPassword.first, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                                <span class="text-danger">*</span>
+                                {{ form_widget(form.plainPassword.first, {'attr': {'class': 'form-control', 'placeholder': 'Choisissez un mot de passe sécurisé'}}) }}
+                                {{ form_errors(form.plainPassword.first) }}
+                                <div class="form-text">Au moins 8 caractères avec majuscules et chiffres</div>
+                            </div>
+
+                            <div class="col-md-6">
+                                {{ form_label(form.plainPassword.second, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                                <span class="text-danger">*</span>
+                                {{ form_widget(form.plainPassword.second, {'attr': {'class': 'form-control', 'placeholder': 'Confirmez votre mot de passe'}}) }}
+                                {{ form_errors(form.plainPassword.second) }}
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            {{ form_label(form.photoFile, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                            {{ form_widget(form.photoFile, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.photoFile) }}
+                            <div class="form-text">Optionnel - Photo de profil (JPG, PNG, max 2MB)</div>
+                        </div>
+
+                        <div class="mb-4">
+                            {{ form_label(form.campus, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                            <span class="text-danger">*</span>
+                            {{ form_widget(form.campus, {'attr': {'class': 'form-select'}}) }}
+                            {{ form_errors(form.campus) }}
+                            <div class="form-text">Sélectionnez votre campus ENI</div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                            <button type="submit" class="btn btn-primary btn-lg me-md-2">
+                                <i class="fas fa-user-plus me-2"></i>Créer mon compte
+                            </button>
+                            <a href="{{ path('app_home') }}" class="btn btn-outline-secondary btn-lg">
+                                <i class="fas fa-arrow-left me-2"></i>Retour à l'accueil
+                            </a>
+                        </div>
+
+                        {{ form_end(form) }}
                     </div>
                 </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="form-group">
-                        {{ form_label(form.telephone, null, {'label_attr': {'class': 'form-label'}}) }}
-                        {{ form_widget(form.telephone, {'attr': {'class': 'form-input', 'placeholder': '06 12 34 56 78'}}) }}
-                        {{ form_errors(form.telephone) }}
-                        <p class="form-help">Optionnel - pour être contacté par les organisateurs</p>
-                    </div>
-
-                    <div class="form-group">
-                        {{ form_label(form.mail, null, {'label_attr': {'class': 'form-label form-required'}}) }}
-                        {{ form_widget(form.mail, {'attr': {'class': 'form-input', 'placeholder': 'votre.email@eni.fr'}}) }}
-                        {{ form_errors(form.mail) }}
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="form-group">
-                        {{ form_label(form.plainPassword.first, null, {'label_attr': {'class': 'form-label form-required'}}) }}
-                        {{ form_widget(form.plainPassword.first, {'attr': {'class': 'form-input', 'placeholder': 'Choisissez un mot de passe sécurisé'}}) }}
-                        {{ form_errors(form.plainPassword.first) }}
-                        <p class="form-help">Au moins 8 caractères avec majuscules et chiffres</p>
-                    </div>
-
-                    <div class="form-group">
-                        {{ form_label(form.plainPassword.second, null, {'label_attr': {'class': 'form-label form-required'}}) }}
-                        {{ form_widget(form.plainPassword.second, {'attr': {'class': 'form-input', 'placeholder': 'Confirmez votre mot de passe'}}) }}
-                        {{ form_errors(form.plainPassword.second) }}
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    {{ form_label(form.photoFile, null, {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_widget(form.photoFile, {'attr': {'class': 'form-input file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100'}}) }}
-                    {{ form_errors(form.photoFile) }}
-                    <p class="form-help">Optionnel - Photo de profil (JPG, PNG, max 2MB)</p>
-                </div>
-
-                <div class="form-group">
-                    {{ form_label(form.campus, null, {'label_attr': {'class': 'form-label form-required'}}) }}
-                    {{ form_widget(form.campus, {'attr': {'class': 'form-select'}}) }}
-                    {{ form_errors(form.campus) }}
-                    <p class="form-help">Sélectionnez votre campus ENI</p>
-                </div>
-
-                <div class="form-actions">
-                    <button type="submit" class="btn-primary">Créer mon compte</button>
-                    <a href="{{ path('app_home') }}" class="btn-secondary">Retour à l'accueil</a>
-                </div>
-                
-            {{ form_end(form) }}
+            </div>
         </div>
     </div>
 
