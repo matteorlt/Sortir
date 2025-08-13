@@ -66,7 +66,8 @@
                     <select name="categorie" id="categorie" class="form-select">
                         <option value="">-- Toutes les catégories --</option>
                         {% for cat in ['Culture', 'Sport', 'Loisirs', 'Détente', 'Formation', 'Autre'] %}
-                            <option value="{{ cat }}" {% if app.request.get('categorie') == cat %}selected{% endif %}>{{ cat }}</option>
+                            <option value="{{ cat }}"
+                                    {% if app.request.get('categorie') == cat %}selected{% endif %}>{{ cat }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -96,6 +97,14 @@
                             <p class="card-text"><strong>Catégorie :</strong> {{ s.categorie }}</p>
                             <a href="{{ path('app_sortie_show', {'id': s.id}) }}"
                                class="btn btn-outline-primary mt-auto align-self-start">Détails</a>
+                            {% if app.user %}
+                                <form method="post" action="{{ path('app_sortie_rejoindre', {'id': s.id}) }}">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('rejoindre' ~ s.id) }}">
+                                    <button type="submit" class="btn btn-success">Rejoindre</button>
+                                </form>
+                            {% else %}
+                                <a href="{{ path('app_utilisateur_inscription') }}" class="btn btn-primary">Inscription au site</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
