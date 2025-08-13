@@ -1,0 +1,124 @@
+{# templates/home/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil - Sortir.com{% endblock %}
+
+{% block body %}
+    {% include 'components/_header.html.twig' %}
+
+    <!-- Bannière principale (Hero section) -->
+    <section class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+
+                <!-- Contenu texte à gauche -->
+                <div class="order-2 lg:order-1">
+                    <!-- Titre principal -->
+                    <h1 class="text-5xl font-bold text-gray-900 mb-6">
+                        Planifiez. Participez. Partagez.
+                    </h1>
+
+                    <!-- Sous-titre -->
+                    <p class="text-xl text-gray-600 mb-8">
+                        La plateforme des sorties extra-scolaires pour les stagiaires ENI.
+                    </p>
+
+                    <!-- Boutons d'action -->
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="" class="bg-purple-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors text-center">
+                            Découvrir les sorties
+                        </a>
+
+                        <a href="" class="bg-gray-400 text-white px-8 py-3 rounded-lg font-medium border-2 border-gray-400 hover:bg-white hover:border-purple-600 hover:text-black transition-colors text-center">
+                            Créer une sortie
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Image à droite -->
+                <div class="order-1 lg:order-2 flex justify-center lg:justify-end">
+                    <img src="{{ asset('images/photo-amis-home.jpg') }}"
+                         alt="Amis qui sortent ensemble"
+                         class="w-96 h-auto rounded-lg scale-150">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section "Pourquoi Sortir.com ?" -->
+    <section class="py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Section sans fond -->
+            <div class="p-8">
+                <div class="flex flex-col lg:flex-row items-start gap-20">
+                    <!-- Image à gauche avec plus d'espace -->
+                    <div class="flex-shrink-0 flex justify-start lg:w-96">
+                        <img src="{{ asset('images/photo-reseaux-home.jpg') }}"
+                             alt="Réseaux sociaux"
+                             class="w-96 h-auto rounded-lg scale-150">
+                    </div>
+
+                    <!-- Contenu à droite avec marge supplémentaire -->
+                    <div class="flex-1 lg:ml-12">
+                        <!-- Titre de la section -->
+                        <div class="mb-8">
+                            <h2 class="text-3xl font-bold text-gray-900 mb-4">
+                                Pourquoi Sortir.com ?
+                            </h2>
+                            <p class="text-lg text-gray-600">
+                                La solution complète pour organiser vos sorties entre stagiaires ENI
+                            </p>
+                        </div>
+
+                        <!-- Grille des avantages -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                            <!-- Accessible partout -->
+                            <div class="text-center md:text-left">
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                                    Accessible partout
+                                </h3>
+                                <p class="text-gray-600">
+                                    Interface responsive, simple et mobile-friendly.
+                                </p>
+                            </div>
+
+                            <!-- Communauté ENI -->
+                            <div class="text-center md:text-left">
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                                    Communauté ENI
+                                </h3>
+                                <p class="text-gray-600">
+                                    Renforcez les liens avec d'autres stagiaires.
+                                </p>
+                            </div>
+
+                            <!-- Organisation simplifiée -->
+                            <div class="text-center md:text-left">
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                                    Organisation simplifiée
+                                </h3>
+                                <p class="text-gray-600">
+                                    Inscriptions et gestion 100% digitalisées.
+                                </p>
+                            </div>
+
+                            <!-- Par campus -->
+                            <div class="text-center md:text-left">
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                                    Par campus
+                                </h3>
+                                <p class="text-gray-600">
+                                    Trouvez les événements proches de vous.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {% include 'components/_footer.html.twig' %}
+
+{% endblock %}

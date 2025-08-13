@@ -8,6 +8,7 @@ use App\Enum\CampusEnum;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
@@ -50,7 +51,8 @@ final class InscriptionType extends AbstractType
                 'mapped' => false,
                 'required' => false,
             ])
-            ->add('campus', ChoiceType::class, [
+            ->add('campus', EnumType::class, [
+                'class' => CampusEnum::class,
                 'choices' => CampusEnum::cases(),
                 'choice_label' => fn(CampusEnum $c) => $c->value,
                 'placeholder' => 'Choisir un campus',
