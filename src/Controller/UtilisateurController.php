@@ -78,4 +78,12 @@ final class UtilisateurController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+    #[Route ('/utilisateur/admin', name: 'app_utilisateur_admin')]
+    public function admin(): Response
+    {
+        return $this->render('utilisateur/admin.html.twig', [
+            'controller_name' => 'UtilisateurController',
+        ]);
+    }
 }

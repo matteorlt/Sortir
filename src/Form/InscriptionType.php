@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Participant;
 use App\Entity\Campus;
+
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 
@@ -15,6 +16,9 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 final class InscriptionType extends AbstractType
 {
@@ -36,6 +40,14 @@ final class InscriptionType extends AbstractType
             ])
             ->add('mail', EmailType::class, [
                 'label' => 'Email',
+                'constraints' => [
+                    new NotBlank(message: 'L’email est obligatoire.'),
+                    new Email(message: 'Veuillez saisir une adresse email valide.'),
+                    new Regex(
+                        pattern: '/@campus-eni\.fr$/i',
+                        message: 'Votre adresse doit se terminer par @campus-eni.fr.'
+                    ),
+                ],
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,

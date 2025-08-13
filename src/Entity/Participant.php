@@ -44,6 +44,9 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToOne(inversedBy: 'participants')]
     private ?Campus $campus = null;
 
+    #[ORM\Column(type: 'json')]
+    private array $roles = [];
+
     /**
      * @var Collection<int, Inscription>
      */
@@ -175,6 +178,21 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        $roles[] = 'ROLE_USER'; // ajouté virtuellement
+        return array_values(array_unique($roles));
+    }
+
+    public function setRoles(array $roles): self
+    {
+        // on retire explicitement ROLE_USER du stockage
+        $roles = array_filter($roles, static fn (string $r) => strtoupper(trim($r)) !== 'ROLE_USER');
+        $this->roles = array_values(array_unique(array_map(static fn ($r) => is_string($r) ? trim($r) : $r, $roles)));
+        return $this;
+    }
+
     /**
      * @return Collection<int, Inscription>
      */
@@ -233,12 +251,6 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
-    }
-
-    // Méthodes requises par UserInterface
-    public function getRoles(): array
-    {
-        return ['ROLE_USER'];
     }
 
     public function eraseCredentials(): void
