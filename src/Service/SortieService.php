@@ -47,10 +47,10 @@ class SortieService
         return $sortie;
     }
 
-    public function filterSorties(?string $sortDate, ?string $participantRange, ?string $campus, ?string $search, ?string $categorie, bool $isInscrit = false, ?Participant $participant = null, bool $isOrganisateur = false)
+    public function filterSorties(?string $sortDate, ?string $participantRange, ?string $campus, ?string $search, ?string $categorie, ?string $etat,bool $isInscrit = false, ?Participant $participant = null, bool $isOrganisateur = false)
     : array
     {
-        return $this->sortieRepository->findFiltered($sortDate, $participantRange, $campus, $search, $categorie, $isInscrit, $participant, $isOrganisateur);
+        return $this->sortieRepository->findFiltered($sortDate, $participantRange, $campus, $search, $categorie, $etat, $isInscrit, $participant, $isOrganisateur);
     }
 
 

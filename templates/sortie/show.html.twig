@@ -51,25 +51,37 @@
                             <dt class="col-sm-4">Catégorie :</dt>
                             <dd class="col-sm-8">{{ sortie.categorie }}</dd>
 
-                            <dt class="col-sm-4">État :</dt>
-                            <dd class="col-sm-8">{{ sortie.etat.libelle.value }}</dd>
-
                             <dt class="col-sm-4">Campus :</dt>
                             <dd class="col-sm-8">
                                 {{ sortie.campus.nomCampus }}
                             </dd>
                             <dt class="col-sm-4">Organisateur :</dt>
-                                {% if sortie.participant %}
-                                    {% set displayName = (sortie.participant.prenom is defined and sortie.participant.prenom ? (sortie.participant.prenom ~ ' ') : '') ~
-                                        (sortie.participant.nom is defined and sortie.participant.nom ? sortie.participant.nom : '') %}
-                                    <dd class="col-sm-8">
-                                          {{ displayName is not empty ? displayName :
-                                          (sortie.participant.username is defined and sortie.participant.username ? sortie.participant.username :
-                                          (sortie.participant.email is defined and sortie.participant.email ? sortie.participant.email : 'Inconnu')) }}
-                                    </dd>
+                            {% if sortie.participant %}
+                                {% set displayName = (sortie.participant.prenom is defined and sortie.participant.prenom ? (sortie.participant.prenom ~ ' ') : '') ~
+                                    (sortie.participant.nom is defined and sortie.participant.nom ? sortie.participant.nom : '') %}
+                                <dd class="col-sm-8">
+                                    {{ displayName is not empty ? displayName :
+                                    (sortie.participant.username is defined and sortie.participant.username ? sortie.participant.username :
+                                    (sortie.participant.email is defined and sortie.participant.email ? sortie.participant.email : 'Inconnu')) }}
+                                </dd>
+                            {% else %}
+                                <span class="col-sm-8">Inconnu</span>
+                            {% endif %}
+
+                            {# État #}
+                            {% set now = "now"|date("U") %}
+                            {% set dateCloture = sortie.dateCloture ? sortie.dateCloture|date("U") : 0 %}
+                            {% set nbInscrits = sortie.inscriptions ? sortie.inscriptions|length : 0 %}
+                            {% set maxInscrits = sortie.nbInscriptionMax %}
+
+                            <dt class="col-sm-4">État :</dt>
+                            <dd class="col-sm-8">
+                                {% if now > dateCloture or nbInscrits >= maxInscrits %}
+                                    <span class="badge bg-danger">Fermé</span>
                                 {% else %}
-                                    <span class="col-sm-8">Inconnu</span>
+                                    <span class="badge bg-success">Ouvert</span>
                                 {% endif %}
+                            </dd>
 
                     </div>
                     <div class="card-footer text-end">
