@@ -22,7 +22,7 @@ class SortieRepository extends ServiceEntityRepository
      * @return Sortie[] Returns an array of Sortie objects
      */
 
-    public function findFiltered(?string $sortDate, ?string $participantRange, ?string $campus, ?string $search, ?string $categorie, bool $isInscrit = false, bool $isOuvert = false, ?Participant $participant = null): array
+    public function findFiltered(?string $sortDate, ?string $participantRange, ?string $campus, ?string $search, ?string $categorie, bool $isInscrit = false, ?Participant $participant = null, bool $isOrganisateur = false): array
     {
         $qb = $this->createQueryBuilder('s');
 
@@ -73,9 +73,10 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('participant', $participant);
         }
 
-        if ($isOuvert) {
-            $qb->andWhere('s.dateCloture > :now')
-                ->setParameter('now', new \DateTimeImmutable());
+        if ($isOrganisateur && $participant) {
+            // Suppose que la propriété organisateur dans Sortie est un ManyToOne vers Participant
+            $qb->andWhere('s.participant = :participantOrganisateur')
+                ->setParameter('participantOrganisateur', $participant);
         }
 
         return $qb->getQuery()->getResult();

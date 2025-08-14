@@ -87,14 +87,8 @@
                         {{ form_widget(sortieForm.ville_nom, {'attr': {'class': 'd-none'}}) }}
                         {{ form_widget(sortieForm.code_postal, {'attr': {'class': 'd-none'}}) }}
 
-                        <div class="row mb-4">
-                            <div class="col-md-6 mb-3 mb-md-0">
-                                {{ form_label(sortieForm.statut, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
-                                <span class="text-danger">*</span>
-                                {{ form_widget(sortieForm.statut, {'attr': {'class': 'form-select'}}) }}
-                                <div class="invalid-feedback d-block">{{ form_errors(sortieForm.statut) }}</div>
-                            </div>
 
+                        <div class="row mb-4">
                             <div class="col-md-6">
                                 {{ form_label(sortieForm.campus, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
                                 <span class="text-danger">*</span>
@@ -102,14 +96,15 @@
                                 <div class="invalid-feedback d-block">{{ form_errors(sortieForm.campus) }}</div>
                                 <div class="form-text">Campus organisateur de la sortie</div>
                             </div>
+
+                            <div class="col-md-6">
+                                {{ form_label(sortieForm.categorie, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                                {{ form_widget(sortieForm.categorie, {'attr': {'class': 'form-select'}}) }}
+                                <div class="invalid-feedback d-block">{{ form_errors(sortieForm.categorie) }}</div>
+                                <div class="form-text">Optionnel - Catégorie de votre sortie</div>
+                            </div>
                         </div>
 
-                        <div class="mb-4">
-                            {{ form_label(sortieForm.categorie, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
-                            {{ form_widget(sortieForm.categorie, {'attr': {'class': 'form-select'}}) }}
-                            {{ form_errors(sortieForm.categorie) }}
-                            <div class="form-text">Optionnel - Catégorie de votre sortie</div>
-                        </div>
 
                         <div class="d-grid gap-2 d-md-flex justify-content-md-center">
                             <button type="submit" class="btn btn-primary btn-lg me-md-2" style="background-color: #8f00ff; border-color: #8f00ff; transition: all 0.3s ease;"

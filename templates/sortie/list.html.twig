@@ -10,9 +10,7 @@
         <h1 class="mb-4 text-center">Liste des sorties</h1>
 
 
-
-
-{#        ---------------------------------------------------- La barre des différents filtres ----------------------------------------------------#}
+        {#        ---------------------------------------------------- La barre des différents filtres --------------------------------------------------- -#}
 
         <form method="get" action="{{ path('app_sortie_list') }}" class="mb-4">
             <div class="row g-3 align-items-end">
@@ -100,24 +98,25 @@
                         </label>
                     </div>
 
-                    <div class="form-check">
-                        <input
-                                class="form-check-input"
-                                type="checkbox"
-                                name="isOuvert"
-                                id="isOuvert"
-                                value="1"
-                                {% if app.request.get('isOuvert') %}checked{% endif %}
-                        >
-                        <label class="form-check-label" for="isOuvert">
-                            Sorties encore ouvertes
-                        </label>
-                    </div>
+                <div class="form-check">
+                    <input
+                            class="form-check-input"
+                            type="checkbox"
+                            name="isOrganisateur"
+                            id="isOrganisateur"
+                            value="1"
+                            {% if app.request.get('estOrganisateur') %}checked{% endif %}
+                    >
+                    <label class="form-check-label" for="isOrganisateur">
+                        Mes sorties créées
+                    </label>
+                </div>
                 </div>
 
                 <div class="col-md-12 mt-3">
                     <button type="submit"
-                            class="btn btn-primary"style="background-color: #8f00ff; border-color: #8f00ff; transition: all 0.3s ease;"
+                            class="btn btn-primary"
+                            style="background-color: #8f00ff; border-color: #8f00ff; transition: all 0.3s ease;"
                             onmouseover="this.style.backgroundColor='#7300cc'; this.style.borderColor='#7300cc';"
                             onmouseout="this.style.backgroundColor='#8f00ff'; this.style.borderColor='#8f00ff';">
                         Filtrer
@@ -131,7 +130,7 @@
         </form>
 
 
-{#------------------------------------------------ Affichage des sorties ------------------------------------------------#}
+        {#- ----------------------------------------------- Affichage des sorties ----------------------------------------------- -#}
 
         <div class="row g-4">
             {% for s in sorties %}
@@ -164,7 +163,8 @@
                                 {% endif %}
                             </p>
                             <div class="mt-auto d-flex gap-2">
-                                <a href="{{ path('app_sortie_show', {'id': s.id}) }}" class="btn btn-outline-primary flex-grow-1">Détails</a>
+                                <a href="{{ path('app_sortie_show', {'id': s.id}) }}"
+                                   class="btn btn-outline-primary flex-grow-1">Détails</a>
 
                                 {% if app.user %}
                                     {% set estOrganisateur = s.participant and app.user.id == s.participant.id %}
@@ -181,13 +181,18 @@
 
                                     {% if not estOrganisateur %}
                                         {% if estInscrit %}
-                                            <form method="post" action="{{ path('app_sortie_desister', {'id': s.id}) }}" class="flex-grow-1">
-                                                <input type="hidden" name="_token" value="{{ csrf_token('desister' ~ s.id) }}">
+                                            <form method="post" action="{{ path('app_sortie_desister', {'id': s.id}) }}"
+                                                  class="flex-grow-1">
+                                                <input type="hidden" name="_token"
+                                                       value="{{ csrf_token('desister' ~ s.id) }}">
                                                 <button type="submit" class="btn btn-danger w-100">Se désister</button>
                                             </form>
                                         {% elseif nbInscrits < maxInscrits %}
-                                            <form method="post" action="{{ path('app_sortie_rejoindre', {'id': s.id}) }}" class="flex-grow-1">
-                                                <input type="hidden" name="_token" value="{{ csrf_token('rejoindre' ~ s.id) }}">
+                                            <form method="post"
+                                                  action="{{ path('app_sortie_rejoindre', {'id': s.id}) }}"
+                                                  class="flex-grow-1">
+                                                <input type="hidden" name="_token"
+                                                       value="{{ csrf_token('rejoindre' ~ s.id) }}">
                                                 <button type="submit" class="btn btn-success w-100">Rejoindre</button>
                                             </form>
                                         {% else %}
@@ -196,7 +201,8 @@
                                     {% endif %}
 
                                 {% else %}
-                                    <a href="{{ path('app_utilisateur_inscription') }}" class="btn btn-primary flex-grow-1">Inscription au site</a>
+                                    <a href="{{ path('app_utilisateur_inscription') }}"
+                                       class="btn btn-primary flex-grow-1">Inscription au site</a>
                                 {% endif %}
                             </div>
                         </div>
