@@ -122,11 +122,8 @@
                             onmouseout="this.style.backgroundColor='#8f00ff'; this.style.borderColor='#8f00ff';">
                         Filtrer
                     </button>
-                <div class="col-md-5 mt-3 d-flex justify-content-lg-start align-items-center gap-3">
-                    <button type="submit" class="btn btn-primary">Filtrer</button>
-
                     {% if app.user %}
-                        <a href="{{ path('app_sortie_create') }}" class="btn btn-success">Créer une sortie</a>
+                        <a href="{{ path('app_sortie_create') }}" class="btn btn-primary">Créer une sortie</a>
                     {% endif %}
                 </div>
             </div>
