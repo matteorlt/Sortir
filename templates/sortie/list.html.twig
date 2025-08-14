@@ -156,9 +156,9 @@
                             {% set maxInscrits = s.nbInscriptionMax %}
 
                             {% if now > dateCloture or nbInscrits >= maxInscrits %}
-                                <span class="badge bg-danger">Fermé</span>
+                                <h5><span class="badge bg-danger">Fermé</span></h5>
                             {% else %}
-                                <span class="badge bg-success">Ouvert</span>
+                                <h5><span class="badge bg-success">Ouvert</span></h5>
                             {% endif %}
                         </div>
 
