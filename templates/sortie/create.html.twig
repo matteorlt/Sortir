@@ -7,10 +7,11 @@
     {% include 'components/_header.html.twig' %}
 
     <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="card shadow">
-                    <div class="card-header bg-primary text-white">
+        <div class="row flex-lg-row align-items-start g-5">
+            <!-- Formulaire à gauche -->
+            <div class="col-lg-7 mb-4">
+                <div>
+                    <div class="card-header text-black text-center">
                         <h1 class="h3 mb-0">Créer une sortie</h1>
                     </div>
 
@@ -22,6 +23,7 @@
                             <span class="text-danger">*</span>
                             {{ form_widget(sortieForm.nomSortie, {'attr': {'class': 'form-control', 'placeholder': 'Ex: Soirée cinéma, Randonnée en forêt...'}}) }}
                             <div class="invalid-feedback d-block">{{ form_errors(sortieForm.nomSortie) }}</div>
+                            <div class="form-text">Donnez un nom attractif à votre sortie</div>
                         </div>
 
                         <div class="row mb-4">
@@ -62,6 +64,7 @@
                             {{ form_label(sortieForm.descriptionInfos, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
                             {{ form_widget(sortieForm.descriptionInfos, {'attr': {'class': 'form-control', 'placeholder': 'Décrivez votre sortie : lieu de rendez-vous, matériel à apporter, programme prévu...', 'rows': '4'}}) }}
                             <div class="invalid-feedback d-block">{{ form_errors(sortieForm.descriptionInfos) }}</div>
+                            <div class="form-text">Optionnel - Détails et informations pratiques</div>
                         </div>
 
                         {# Champ adresse avec suggestions stylé #}
@@ -97,17 +100,21 @@
                                 <span class="text-danger">*</span>
                                 {{ form_widget(sortieForm.campus, {'attr': {'class': 'form-select'}}) }}
                                 <div class="invalid-feedback d-block">{{ form_errors(sortieForm.campus) }}</div>
-                            </div>
-
-                            <div class="form-group">
-                                {{ form_label(sortieForm.categorie, null, {'label_attr': {'class': 'form-label'}}) }}
-                                {{ form_widget(sortieForm.categorie, {'attr': {'class': 'form-select'}}) }}
-                                {{ form_errors(sortieForm.categorie) }}
+                                <div class="form-text">Campus organisateur de la sortie</div>
                             </div>
                         </div>
 
+                        <div class="mb-4">
+                            {{ form_label(sortieForm.categorie, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                            {{ form_widget(sortieForm.categorie, {'attr': {'class': 'form-select'}}) }}
+                            {{ form_errors(sortieForm.categorie) }}
+                            <div class="form-text">Optionnel - Catégorie de votre sortie</div>
+                        </div>
+
                         <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-                            <button type="submit" class="btn btn-primary btn-lg me-md-2">
+                            <button type="submit" class="btn btn-primary btn-lg me-md-2" style="background-color: #8f00ff; border-color: #8f00ff; transition: all 0.3s ease;"
+                                    onmouseover="this.style.backgroundColor='#7300cc'; this.style.borderColor='#7300cc';"
+                                    onmouseout="this.style.backgroundColor='#8f00ff'; this.style.borderColor='#8f00ff';">
                                 <i class="fas fa-plus me-2"></i>Créer la sortie
                             </button>
                             <a href="{{ path('app_sortie_list') }}" class="btn btn-outline-secondary btn-lg">
@@ -118,6 +125,22 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Trait de séparation vertical -->
+            <div class="col-lg-1 d-none d-lg-flex justify-content-center">
+                <div class="border-end h-75 mt-5" style="border-width: 2px !important; border-color: #dee2e6 !important;"></div>
+            </div>
+
+            <!-- Image à droite (descendue) -->
+            <div class="col-lg-4 d-flex align-items-end justify-content-center">
+                <div class="mb-5">
+                    <img src="{{ asset('images/photo-create-sortie.jpg') }}"
+                         alt="Création d'une sortie"
+                         class="img-fluid"
+                         style="max-width: 500px; height: auto;">
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>

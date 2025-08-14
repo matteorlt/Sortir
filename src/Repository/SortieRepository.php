@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Participant;
 use App\Entity\Sortie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -21,7 +22,7 @@ class SortieRepository extends ServiceEntityRepository
      * @return Sortie[] Returns an array of Sortie objects
      */
 
-    public function findFiltered(?string $sortDate, ?string $sortInscription, ?string $campus, ?string $search, ?string $categorie): array
+    public function findFiltered(?string $sortDate, ?string $participantRange, ?string $campus, ?string $search, ?string $categorie, bool $isInscrit = false, bool $isOuvert = false, ?Participant $participant = null): array
     {
         $qb = $this->createQueryBuilder('s');
 
@@ -46,8 +47,35 @@ class SortieRepository extends ServiceEntityRepository
             $qb->addOrderBy('s.dateDebut', strtoupper($sortDate) === 'DESC' ? 'DESC' : 'ASC');
         }
 
-        if ($sortInscription) {
-            $qb->addOrderBy('s.nbInscriptionMax', strtoupper($sortInscription) === 'DESC' ? 'DESC' : 'ASC');
+        if ($participantRange) {
+            switch ($participantRange) {
+                case '0-5':
+                    $qb->andWhere('s.nbInscriptionMax BETWEEN 0 AND 5');
+                    break;
+                case '6-10':
+                    $qb->andWhere('s.nbInscriptionMax BETWEEN 6 AND 10');
+                    break;
+                case '11-15':
+                    $qb->andWhere('s.nbInscriptionMax BETWEEN 11 AND 15');
+                    break;
+                case '16-20':
+                    $qb->andWhere('s.nbInscriptionMax BETWEEN 16 AND 20');
+                    break;
+                case '21+':
+                    $qb->andWhere('s.nbInscriptionMax > 20');
+                    break;
+            }
+        }
+
+        if ($isInscrit && $participant) {
+            $qb->join('s.inscriptions', 'i')
+                ->andWhere('i.participant = :participant')
+                ->setParameter('participant', $participant);
+        }
+
+        if ($isOuvert) {
+            $qb->andWhere('s.dateCloture > :now')
+                ->setParameter('now', new \DateTimeImmutable());
         }
 
         return $qb->getQuery()->getResult();

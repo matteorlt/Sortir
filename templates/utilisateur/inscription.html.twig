@@ -83,6 +83,13 @@
                         </div>
 
                         <div class="mb-4">
+                            {{ form_widget(form.actif, {'attr': {'class': 'form-check-input'}}) }}
+                            {{ form_label(form.actif, null, {'label_attr': {'class': 'form-check-label'}}) }}
+                            {{ form_errors(form.actif) }}
+                            <div class="form-text">{{ form.actif.vars.help }}</div>
+                        </div>
+
+                        <div class="mb-4">
                             {{ form_label(form.campus, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
                             <span class="text-danger">*</span>
                             {{ form_widget(form.campus, {'attr': {'class': 'form-select'}}) }}
@@ -111,7 +118,7 @@
                 <div class="border-end h-75 mt-5" style="border-width: 2px !important; border-color: #dee2e6 !important;"></div>
             </div>
 
-            <!-- Image à droite (descendue) -->
+            <!-- Image à droite -->
             <div class="col-lg-4 d-flex align-items-end justify-content-center">
                 <div class="mb-5">
                     <img src="{{ asset('images/photo-register.jpg') }}"

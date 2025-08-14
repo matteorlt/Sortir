@@ -35,8 +35,8 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $motDePasse = null;
 
-    #[ORM\Column]
-    private ?bool $actif = null;
+    #[ORM\Column(type: 'boolean', options: ['default' => 1])]
+    private ?bool $actif = true;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $photo = null;
@@ -63,6 +63,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->inscritption = new ArrayCollection();
         $this->sorties = new ArrayCollection();
+        $this->actif = true; // Par défaut actif
     }
 
     public function getId(): ?int
@@ -152,6 +153,11 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
         $this->actif = $actif;
 
         return $this;
+    }
+
+    public function getActif(): ?bool
+    {
+        return $this->actif;
     }
 
     public function getPhoto(): ?string

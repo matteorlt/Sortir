@@ -128,12 +128,14 @@ final class SortieController extends AbstractController
     public function list(Request $request, SortieService $sortieService): Response
     {
         $sortDate = $request->query->get('sortDate');
-        $sortInscription = $request->query->get('sortInscription');
+        $participantRange = $request->query->get('participantRange');
         $campus = $request->query->get('campus');
         $search = $request->query->get('search');
         $categorie = $request->query->get('categorie');
+        $isInscrit = $request->query->getBoolean('isInscrit');
+        $isOuvert = $request->query->getBoolean('isOuvert');
 
-        $sorties = $sortieService->filterSorties($sortDate, $sortInscription, $campus, $search, $categorie);
+        $sorties = $sortieService->filterSorties($sortDate, $participantRange, $campus, $search, $categorie, $isInscrit, $isOuvert, $this->getUser());
 
         return $this->render('sortie/list.html.twig', [
             'sorties' => $sorties,
