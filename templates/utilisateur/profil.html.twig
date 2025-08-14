@@ -7,11 +7,12 @@
     {% include 'components/_header.html.twig' %}
 
     <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8 col-lg-6">
-                <div class="card shadow">
-                    <div class="card-header bg-primary text-white text-center">
-                        <h1 class="h3 mb-0"><i class="fas fa-user me-2"></i>Mon Profil</h1>
+        <div class="row flex-lg-row align-items-start g-5">
+            <!-- Contenu profil à gauche -->
+            <div class="col-lg-7 mb-4">
+                <div>
+                    <div class="card-header text-black text-center">
+                        <h1 class="h3 mb-0">Mon Profil</h1>
                     </div>
 
                     <div class="card-body p-4">
@@ -19,16 +20,17 @@
 
                             <!-- Photo de profil -->
                             <div class="text-center mb-4">
-                                    <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center mx-auto border border-3 border-primary"
-                                         style="width: 120px; height: 120px;">
-                                        <i class="fas fa-user fa-3x text-white"></i>
-                                    </div>
+                                <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center mx-auto border border-3"
+                                     style="width: 120px; height: 120px; border-color: #8f00ff !important;">
+                                    <i class="fas fa-user fa-3x text-white"></i>
+                                </div>
                             </div>
 
                             <!-- Informations personnelles -->
                             <div class="mb-4">
                                 <label class="form-label fw-bold">Pseudo</label>
                                 <div class="form-control bg-light">{{ app.user.pseudo }}</div>
+                                <div class="form-text">Ce nom est visible par les autres utilisateurs</div>
                             </div>
 
                             <div class="row mb-4">
@@ -53,6 +55,7 @@
                                             <span class="text-muted fst-italic">Non renseigné</span>
                                         {% endif %}
                                     </div>
+                                    <div class="form-text">Pour être contacté par les organisateurs</div>
                                 </div>
 
                                 <div class="col-md-6">
@@ -61,12 +64,17 @@
                                 </div>
                             </div>
 
-                            <!-- Statistiques (optionnel) -->
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Campus</label>
+                                <div class="form-text">Votre campus ENI</div>
+                            </div>
+
+                            <!-- Statistiques -->
                             <div class="row mb-4">
                                 <div class="col-4 text-center">
                                     <div class="card bg-light border-0">
                                         <div class="card-body py-2">
-                                            <h5 class="text-primary mb-0">0</h5>
+                                            <h5 class="mb-0" style="color: #8f00ff;">0</h5>
                                             <small class="text-muted">Sorties créées</small>
                                         </div>
                                     </div>
@@ -74,7 +82,7 @@
                                 <div class="col-4 text-center">
                                     <div class="card bg-light border-0">
                                         <div class="card-body py-2">
-                                            <h5 class="text-primary mb-0">0</h5>
+                                            <h5 class="mb-0" style="color: #8f00ff;">0</h5>
                                             <small class="text-muted">Participations</small>
                                         </div>
                                     </div>
@@ -91,9 +99,12 @@
 
                             <!-- Actions -->
                             <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-{#                                <a href="{{ path('app_utilisateur_edit_profil') }}" class="btn btn-primary btn-lg me-md-2">#}
+                                <a href="{{ path('app_utilisateur_edit_profil') }}"
+                                   class="btn btn-primary btn-lg me-md-2" style="background-color: #8f00ff; border-color: #8f00ff; transition: all 0.3s ease;"
+                                   onmouseover="this.style.backgroundColor='#7300cc'; this.style.borderColor='#7300cc';"
+                                   onmouseout="this.style.backgroundColor='#8f00ff'; this.style.borderColor='#8f00ff';">
                                     <i class="fas fa-edit me-2"></i>Modifier mon profil
-{#                                </a>#}
+                                </a>
                                 <a href="{{ path('app_utilisateur_edit_profil_password') }}" class="btn btn-outline-secondary btn-lg">
                                     <i class="fas fa-key me-2"></i>Changer mot de passe
                                 </a>
@@ -113,6 +124,12 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Trait de séparation vertical -->
+            <div class="col-lg-1 d-none d-lg-flex justify-content-center">
+                <div class="border-end h-75 mt-5" style="border-width: 2px !important; border-color: #dee2e6 !important;"></div>
+            </div>
+
         </div>
     </div>
 

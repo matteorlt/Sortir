@@ -19,6 +19,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+
 
 final class InscriptionType extends AbstractType
 {
@@ -61,10 +63,16 @@ final class InscriptionType extends AbstractType
                 'mapped' => false,
                 'required' => false,
             ])
+            ->add('actif', CheckboxType::class, [
+                'label' => 'Stagiaire actif',
+                'required' => false,
+                'data' => true, // Par défaut coché
+                'help' => 'Désactivez si vous n\'êtes plus stagiaire',
+            ])
             ->add('campus', EntityType::class, [
                 'class' => Campus::class,
                 'choice_label' => 'nomCampus',
-                'placeholder' => 'Choisir un campus',
+                'placeholder' => 'Choisissez votre campus où vous êtes/étiez rattaché(e)',
                 'label' => 'Campus',
                 'required' => false,
             ]);

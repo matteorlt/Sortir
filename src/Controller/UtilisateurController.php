@@ -46,9 +46,9 @@ final class UtilisateurController extends AbstractController
             $participant->setMotDePasse($hashed);
 
 
-            // Activer par défaut
+            $actifValue = $form->get('actif')->getData();
             if (method_exists($participant, 'setActif')) {
-                $participant->setActif(true);
+                $participant->setActif($actifValue ?? true); // true par défaut si null
             }
 
             // Upload photo (optionnel)
@@ -202,6 +202,16 @@ final class UtilisateurController extends AbstractController
         return $this->render('utilisateur/edit_profil_password.html.twig', [
             'utilisateur' => $user,
             'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/profil/edit', name: 'app_utilisateur_edit_profil')]
+    public function profilEdit(): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        return $this->render('utilisateur/edit_profil.html.twig', [
+            'utilisateur' => $this->getUser(),
         ]);
     }
 
