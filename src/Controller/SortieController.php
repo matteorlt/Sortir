@@ -203,9 +203,15 @@ final class SortieController extends AbstractController
         $participant = $user;
 
         try {
-            $sortieService->desisterSortie($id, $participant);
-            $this->addFlash('success', 'Vous vous êtes désisté avec succès.');
-        } catch (\Exception $e) {
+            $result = $sortieService->seDesisterSortie($id, $participant);
+
+            if ($result) {
+                $this->addFlash('success', 'Vous vous êtes désisté de la sortie.');
+            } else {
+                $this->addFlash('info', 'Vous n\'êtes pas inscrit à cette sortie.');
+            }
+
+        } catch (\InvalidArgumentException $e) {
             $this->addFlash('danger', $e->getMessage());
         }
 

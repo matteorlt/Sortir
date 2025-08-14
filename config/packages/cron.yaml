@@ -1,0 +1,6 @@
+# Configuration pour les tâches cron
+# Ajoutez cette ligne dans votre crontab pour exécuter les rappels toutes les heures :
+# 0 * * * * cd /path/to/your/project && php bin/console app:send-sortie-reminders
+
+# Ou pour exécuter tous les jours à 9h du matin :
+# 0 9 * * * cd /path/to/your/project && php bin/console app:send-sortie-reminders

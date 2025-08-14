@@ -81,6 +81,22 @@ class SortieRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    /**
+     * Trouve les sorties qui ont lieu dans 48h
+     */
+    public function findSortiesIn48h(\DateTime $date48h): array
+    {
+        $qb = $this->createQueryBuilder('s');
+        
+        $qb->andWhere('s.dateDebut BETWEEN :now AND :date48h')
+            ->andWhere('s.etat IS NOT NULL')
+            ->setParameter('now', new \DateTime())
+            ->setParameter('date48h', $date48h)
+            ->orderBy('s.dateDebut', 'ASC');
+
+        return $qb->getQuery()->getResult();
+    }
+
 
 
 
