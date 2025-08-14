@@ -67,6 +67,11 @@ class SortieService
             }
         }
 
+        // Vérifier si la sortie est pleine
+        if (count($sortie->getInscriptions()) >= $sortie->getNbInscriptionMax()) {
+            return false; // sortie pleine, pas d'inscription possible
+        }
+
         // Créer une nouvelle inscription
         $inscription = new Inscription();
         $inscription->setParticipant($participant);
@@ -78,4 +83,24 @@ class SortieService
 
         return true;
     }
+
+    public function desisterSortie(int $sortieId, Participant $participant): void
+    {
+        $sortie = $this->sortieRepository->find($sortieId);
+
+        if (!$sortie) {
+            throw new \InvalidArgumentException("Sortie introuvable.");
+        }
+
+        foreach ($sortie->getInscriptions() as $inscription) {
+            if ($inscription->getParticipant() === $participant) {
+                $this->em->remove($inscription);
+                $this->em->flush();
+                return;
+            }
+        }
+
+        throw new \InvalidArgumentException("Vous n'êtes pas inscrit à cette sortie.");
+    }
+
 }

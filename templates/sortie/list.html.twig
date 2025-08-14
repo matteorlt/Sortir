@@ -122,6 +122,7 @@
                             onmouseout="this.style.backgroundColor='#8f00ff'; this.style.borderColor='#8f00ff';">
                         Filtrer
                     </button>
+
                     {% if app.user %}
                         <a href="{{ path('app_sortie_create') }}" class="btn btn-primary">Créer une sortie</a>
                     {% endif %}
@@ -175,16 +176,25 @@
                                         {% endif %}
                                     {% endfor %}
 
+                                    {% set nbInscrits = s.inscriptions|length %}
+                                    {% set maxInscrits = s.nbInscriptionMax %}
+
                                     {% if not estOrganisateur %}
                                         {% if estInscrit %}
-                                            <button type="button" class="btn btn-secondary flex-grow-1" disabled>Déjà inscrit</button>
-                                        {% else %}
+                                            <form method="post" action="{{ path('app_sortie_desister', {'id': s.id}) }}" class="flex-grow-1">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('desister' ~ s.id) }}">
+                                                <button type="submit" class="btn btn-danger w-100">Se désister</button>
+                                            </form>
+                                        {% elseif nbInscrits < maxInscrits %}
                                             <form method="post" action="{{ path('app_sortie_rejoindre', {'id': s.id}) }}" class="flex-grow-1">
                                                 <input type="hidden" name="_token" value="{{ csrf_token('rejoindre' ~ s.id) }}">
                                                 <button type="submit" class="btn btn-success w-100">Rejoindre</button>
                                             </form>
+                                        {% else %}
+                                            {# Ne rien afficher si la sortie est complète #}
                                         {% endif %}
                                     {% endif %}
+
                                 {% else %}
                                     <a href="{{ path('app_utilisateur_inscription') }}" class="btn btn-primary flex-grow-1">Inscription au site</a>
                                 {% endif %}

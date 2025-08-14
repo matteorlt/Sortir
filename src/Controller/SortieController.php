@@ -182,4 +182,34 @@ final class SortieController extends AbstractController
 
         return $this->redirectToRoute('app_sortie_list');
     }
+
+    #[Route('/{id}/desister', name: 'desister', methods: ['POST'])]
+    public function desister(int $id, SortieService $sortieService, Request $request): Response
+    {
+        $user = $this->getUser();
+
+        if (!$user) {
+            $this->addFlash('danger', "Vous devez être connecté.");
+            return $this->redirectToRoute('app_utilisateur_inscription');
+        }
+
+        // Vérifie le token CSRF
+        if (!$this->isCsrfTokenValid('desister' . $id, $request->request->get('_token'))) {
+            $this->addFlash('danger', "Jeton CSRF invalide.");
+            return $this->redirectToRoute('app_sortie_list');
+        }
+
+        /** @var Participant $participant */
+        $participant = $user;
+
+        try {
+            $sortieService->desisterSortie($id, $participant);
+            $this->addFlash('success', 'Vous vous êtes désisté avec succès.');
+        } catch (\Exception $e) {
+            $this->addFlash('danger', $e->getMessage());
+        }
+
+        return $this->redirectToRoute('app_sortie_list');
+    }
+
 }
