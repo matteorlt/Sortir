@@ -7,7 +7,6 @@ use App\Entity\Lieu;
 use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Entity\Ville;
-use App\Enum\Statut;
 use App\Enum\CampusEnum;
 use App\Form\SortieType;
 use App\Repository\EtatRepository;
@@ -91,15 +90,6 @@ final class SortieController extends AbstractController
             }
             $sortie->setLieu($lieu);
 
-            // Etat via enum Statut
-            /** @var Statut $statut */
-            $statut = $form->get('statut')->getData();
-            $etat = $etatRepo->findOneBy(['libelle' => $statut]);
-            if (!$etat) {
-                $etat = (new Etat())->setLibelle($statut);
-                $em->persist($etat);
-            }
-            $sortie->setEtat($etat);
 
             // Campus via enum CampusEnum (recherche par nomCampus)
             /** @var CampusEnum|null $campusEnum */
