@@ -35,7 +35,7 @@ class SortieService
      */
     public function getSortieDetails(int $id): Sortie
     {
-        $sortie = $this->sortieRepository->find($id); // ici : $sortieRepository (pas $sortieRepo)
+        $sortie = $this->sortieRepository->find($id);
 
         if (!$sortie) {
             $this->logger->warning("Sortie non trouvée pour l'ID {$id}");
@@ -45,9 +45,10 @@ class SortieService
         return $sortie;
     }
 
-    public function filterSorties(?string $sortDate, ?string $sortInscription, ?string $campus, ?string $search, ?string $categorie): array
+    public function filterSorties(?string $sortDate, ?string $participantRange, ?string $campus, ?string $search, ?string $categorie, bool $isInscrit = false, bool $isOuvert = false, ?Participant $participant = null)
+    : array
     {
-        return $this->sortieRepository->findFiltered($sortDate, $sortInscription, $campus, $search, $categorie);
+        return $this->sortieRepository->findFiltered($sortDate, $participantRange, $campus, $search, $categorie, $isInscrit, $isOuvert, $participant);
     }
 
 

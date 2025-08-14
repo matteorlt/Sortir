@@ -38,17 +38,27 @@
                 </div>
 
                 <div class="col-md-3">
-                    <label for="sortInscription" class="form-label">Nombre maximum d'inscrits</label>
-                    <select name="sortInscription" id="sortInscription" class="form-select">
-                        <option value="">-- Aucun tri --</option>
-                        <option value="asc" {% if app.request.get('sortInscription') == 'asc' %}selected{% endif %}>
-                            Croissant
+                    <label for="participantRange" class="form-label">Nombre de participants</label>
+                    <select name="participantRange" id="participantRange" class="form-select">
+                        <option value="">-- Toutes les tranches --</option>
+                        <option value="0-5" {% if app.request.get('participantRange') == '0-5' %}selected{% endif %}>0 -
+                            5
                         </option>
-                        <option value="desc" {% if app.request.get('sortInscription') == 'desc' %}selected{% endif %}>
-                            Décroissant
+                        <option value="6-10" {% if app.request.get('participantRange') == '6-10' %}selected{% endif %}>6
+                            - 10
+                        </option>
+                        <option value="11-15"
+                                {% if app.request.get('participantRange') == '11-15' %}selected{% endif %}>11 - 15
+                        </option>
+                        <option value="16-20"
+                                {% if app.request.get('participantRange') == '16-20' %}selected{% endif %}>16 - 20
+                        </option>
+                        <option value="21+" {% if app.request.get('participantRange') == '21+' %}selected{% endif %}>
+                            + de 20
                         </option>
                     </select>
                 </div>
+
 
                 <div class="col-md-3">
                     <label for="campus" class="form-label">Campus</label>
@@ -70,6 +80,36 @@
                                     {% if app.request.get('categorie') == cat %}selected{% endif %}>{{ cat }}</option>
                         {% endfor %}
                     </select>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-check">
+                        <input
+                                class="form-check-input"
+                                type="checkbox"
+                                name="isInscrit"
+                                id="isInscrit"
+                                value="1"
+                                {% if app.request.get('isInscrit') %}checked{% endif %}
+                        >
+                        <label class="form-check-label" for="isInscrit">
+                            Sorties auxquelles je suis inscrit
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input
+                                class="form-check-input"
+                                type="checkbox"
+                                name="isOuvert"
+                                id="isOuvert"
+                                value="1"
+                                {% if app.request.get('isOuvert') %}checked{% endif %}
+                        >
+                        <label class="form-check-label" for="isOuvert">
+                            Sorties encore ouvertes
+                        </label>
+                    </div>
                 </div>
 
                 <div class="col-md-12 mt-3">
@@ -95,16 +135,30 @@
                             <p class="card-text"><strong>Max participants :</strong> {{ s.nbInscriptionMax }}</p>
                             <p class="card-text"><strong>Adresse :</strong> {{ s.lieu.nomLieu }}</p>
                             <p class="card-text"><strong>Catégorie :</strong> {{ s.categorie }}</p>
-                            <a href="{{ path('app_sortie_show', {'id': s.id}) }}"
-                               class="btn btn-outline-primary mt-auto align-self-start">Détails</a>
-                            {% if app.user %}
-                                <form method="post" action="{{ path('app_sortie_rejoindre', {'id': s.id}) }}">
-                                    <input type="hidden" name="_token" value="{{ csrf_token('rejoindre' ~ s.id) }}">
-                                    <button type="submit" class="btn btn-success">Rejoindre</button>
-                                </form>
-                            {% else %}
-                                <a href="{{ path('app_utilisateur_inscription') }}" class="btn btn-primary">Inscription au site</a>
-                            {% endif %}
+                            <div class="mt-auto d-flex gap-2">
+                                <a href="{{ path('app_sortie_show', {'id': s.id}) }}" class="btn btn-outline-primary flex-grow-1">Détails</a>
+
+                                {% if app.user %}
+                                    {% set estInscrit = false %}
+                                    {% for inscription in s.inscriptions %}
+                                        {% if inscription.participant.id == app.user.id %}
+                                            {% set estInscrit = true %}
+                                        {% endif %}
+                                    {% endfor %}
+
+                                    {% if not estInscrit %}
+                                        <form method="post" action="{{ path('app_sortie_rejoindre', {'id': s.id}) }}" class="flex-grow-1">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('rejoindre' ~ s.id) }}">
+                                            <button type="submit" class="btn btn-success w-100">Rejoindre</button>
+                                        </form>
+                                    {% else %}
+                                        <button type="button" class="btn btn-secondary flex-grow-1" disabled>Déjà inscrit</button>
+                                    {% endif %}
+                                {% else %}
+                                    <a href="{{ path('app_utilisateur_inscription') }}" class="btn btn-primary flex-grow-1">Inscription au site</a>
+                                {% endif %}
+                            </div>
+
                         </div>
                     </div>
                 </div>
