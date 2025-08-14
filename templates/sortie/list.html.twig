@@ -59,7 +59,6 @@
                     </select>
                 </div>
 
-
                 <div class="col-md-3">
                     <label for="campus" class="form-label">Campus</label>
                     <select name="campus" id="campus" class="form-select">
@@ -119,7 +118,7 @@
         </form>
 
 
-        <div class="row g-4"> {# g-4 ajoute un espacement entre colonnes et lignes #}
+        <div class="row g-4">
             {% for s in sorties %}
                 <div class="col-md-6">
                     <div class="card h-100 shadow-sm">
@@ -159,6 +158,31 @@
                                 {% endif %}
                             </div>
 
+                            <p class="card-text"><strong>Catégorie :</strong> {{ s.categorie }}</p>
+                            <p class="card-text">
+                                <strong>Organisateur :</strong>
+                                {% if s.participant %}
+                                    {% set displayName = (s.participant.prenom is defined and s.participant.prenom ? (s.participant.prenom ~ ' ') : '') ~
+                                        (s.participant.nom is defined and s.participant.nom ? s.participant.nom : '') %}
+                                    <span class="col-sm-8">
+                                          {{ displayName is not empty ? displayName :
+                                          (s.participant.username is defined and s.participant.username ? s.participant.username :
+                                          (s.participant.email is defined and s.participant.email ? s.participant.email : 'Inconnu')) }}
+                                    </span>
+                                {% else %}
+                                    <span class="col-sm-8">Inconnu</span>
+                                {% endif %}
+                            </p>
+                            <a href="{{ path('app_sortie_show', {'id': s.id}) }}"
+                               class="btn btn-outline-primary mt-auto align-self-start">Détails</a>
+                            {% if app.user %}
+                                <form method="post" action="{{ path('app_sortie_rejoindre', {'id': s.id}) }}">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('rejoindre' ~ s.id) }}">
+                                    <button type="submit" class="btn btn-success">Rejoindre</button>
+                                </form>
+                            {% else %}
+                                <a href="{{ path('app_utilisateur_inscription') }}" class="btn btn-primary">Inscription au site</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
