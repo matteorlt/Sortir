@@ -8,7 +8,7 @@ framework:
       medium: ['email']
       low: ['email']
     admin_recipients:
-      - { email: 'admin@example.com' }
+      - { emails: 'admin@example.com' }
       # Pour plusieurs admins, ajoutez une entrée par destinataire :
-      # - { email: 'admin2@example.com' }
-      # - { email: 'admin3@example.com' }
+      # - { emails: 'admin2@example.com' }
+      # - { emails: 'admin3@example.com' }
