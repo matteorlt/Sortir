@@ -78,6 +78,33 @@
                                 </span>
                                 </dd>
                             {% endif %}
+                            {% if sortie.participant %}
+                                {% set displayName = (sortie.participant.prenom is defined and sortie.participant.prenom ? (sortie.participant.prenom ~ ' ') : '') ~
+                                    (sortie.participant.nom is defined and sortie.participant.nom ? sortie.participant.nom : '') %}
+                                <dd class="col-sm-8">
+                                    {{ displayName is not empty ? displayName :
+                                    (sortie.participant.username is defined and sortie.participant.username ? sortie.participant.username :
+                                    (sortie.participant.email is defined and sortie.participant.email ? sortie.participant.email : 'Inconnu')) }}
+                                </dd>
+                            {% else %}
+                                <span class="col-sm-8">Inconnu</span>
+                            {% endif %}
+
+                            {# État #}
+                            {% set now = "now"|date("U") %}
+                            {% set dateCloture = sortie.dateCloture ? sortie.dateCloture|date("U") : 0 %}
+                            {% set nbInscrits = sortie.inscriptions ? sortie.inscriptions|length : 0 %}
+                            {% set maxInscrits = sortie.nbInscriptionMax %}
+
+                            <dt class="col-sm-4">État :</dt>
+                            <dd class="col-sm-8">
+                                {% if now > dateCloture or nbInscrits >= maxInscrits %}
+                                    <span class="badge bg-danger">Fermé</span>
+                                {% else %}
+                                    <span class="badge bg-success">Ouvert</span>
+                                {% endif %}
+                            </dd>
+
                     </div>
                     <div class="card-footer text-end">
                         <a href="{{ path('app_sortie_list') }}" class="btn btn-secondary">← Retour à la liste</a>
