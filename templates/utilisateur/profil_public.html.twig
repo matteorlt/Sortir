@@ -1,0 +1,139 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil de {{ utilisateur.prenom }} {{ utilisateur.nom }}{% endblock %}
+
+{% block body %}
+
+    {% include 'components/_header.html.twig' %}
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <!-- Contenu profil centré -->
+            <div class="col-lg-8 col-xl-6">
+                <div>
+                    <div class="card-header text-black text-center">
+                        <h1 class="h3 mb-0">Profil de {{ utilisateur.prenom }} {{ utilisateur.nom }}</h1>
+                    </div>
+
+                    <div class="card-body p-4">
+                        <!-- Photo de profil avec gestion de l'image -->
+                        <div class="text-center mb-4">
+                            {% if utilisateur.photo %}
+                                <!-- Si l'utilisateur a une photo -->
+                                <div class="position-relative mx-auto" style="width: 120px; height: 120px;">
+                                    <img src="{{ asset('uploads/photos/' ~ utilisateur.photo) }}"
+                                         alt="Photo de {{ utilisateur.prenom }}"
+                                         class="rounded-circle border border-3 w-100 h-100 object-fit-cover"
+                                         style="border-color: #8f00ff !important;">
+                                </div>
+                            {% else %}
+                                <!-- Si pas de photo, afficher l'icône par défaut -->
+                                <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center mx-auto border border-3"
+                                     style="width: 120px; height: 120px; border-color: #8f00ff !important;">
+                                    <i class="fas fa-user fa-3x text-white"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Informations personnelles -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Pseudo</label>
+                            <div class="form-control bg-light">{{ utilisateur.pseudo }}</div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <label class="form-label fw-bold">Nom</label>
+                                <div class="form-control bg-light">{{ utilisateur.nom }}</div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Prénom</label>
+                                <div class="form-control bg-light">{{ utilisateur.prenom }}</div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <label class="form-label fw-bold">Téléphone</label>
+                                <div class="form-control bg-light">
+                                    {% if utilisateur.telephone %}
+                                        {{ utilisateur.telephone }}
+                                    {% else %}
+                                        <span class="text-muted fst-italic">Non renseigné</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Email</label>
+                                <div class="form-control bg-light">{{ utilisateur.mail }}</div>
+                            </div>
+                        </div>
+
+                        <div class="form-check mb-4">
+                            <input type="checkbox" class="form-check-input" id="actif"
+                                    {{ utilisateur.actif == 1 ? 'checked' : '' }}
+                                   disabled readonly>
+                            <label for="actif" class="form-check-label fw-bold">
+                                Stagiaire actif
+                            </label>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Campus</label>
+                            <div class="form-control bg-light">
+                                {% if utilisateur.campus %}
+                                    {{ utilisateur.campus.nomCampus }}
+                                {% else %}
+                                    <span class="text-muted fst-italic">Non renseigné</span>
+                                {% endif %}
+                            </div>
+                            <div class="form-text">Campus ENI de rattachement</div>
+                        </div>
+
+                        <!-- Statistiques -->
+                        <div class="row mb-4">
+                            <div class="col-4 text-center">
+                                <div class="card bg-light border-0">
+                                    <div class="card-body py-2">
+                                        <h5 class="mb-0" style="color: #8f00ff;">{{ utilisateur.sorties|length }}</h5>
+                                        <small class="text-muted">Sorties créées</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4 text-center">
+                                <div class="card bg-light border-0">
+                                    <div class="card-body py-2">
+                                        <h5 class="mb-0" style="color: #8f00ff;">{{ utilisateur.inscritption|length }}</h5>
+                                        <small class="text-muted">Participations</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4 text-center">
+                                <div class="card bg-light border-0">
+                                    <div class="card-body py-2">
+                                        <h5 class="{{ utilisateur.actif == 1 ? 'text-success' : 'text-danger' }} mb-0">
+                                            {{ utilisateur.actif == 1 ? 'Actif' : 'Inactif' }}
+                                        </h5>
+                                        <small class="text-muted">Statut</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                            <a href="javascript:history.back()" class="btn btn-outline-secondary btn-lg">
+                                <i class="fas fa-arrow-left me-2"></i>Retour
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'components/_footer.html.twig' %}
+
+{% endblock %}

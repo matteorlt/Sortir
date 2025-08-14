@@ -76,7 +76,7 @@ final class UtilisateurController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Compte créé avec succès !');
-            return $this->redirectToRoute('app_home');
+            return $this->redirectToRoute('app_login');
         }
 
         return $this->render('utilisateur/inscription.html.twig', [
@@ -141,8 +141,27 @@ final class UtilisateurController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        return $this->render('utilisateur/profil.html.twig', [
+        return $this->render('utilisateur/profil_prive.html.twig', [
             'utilisateur' => $this->getUser(),
+        ]);
+    }
+
+    #[Route('/utilisateur/profil/{id}', name: 'app_utilisateur_profil_public', requirements: ['id' => '\d+'])]
+    public function profilPublic(int $id, EntityManagerInterface $em): Response
+    {
+        $participant = $em->getRepository(Participant::class)->find($id);
+
+        if (!$participant) {
+            throw $this->createNotFoundException('Utilisateur non trouvé');
+        }
+
+        // Vérifier si l'utilisateur est actif (optionnel)
+        if (!$participant->isActif()) {
+            throw $this->createNotFoundException('Profil non disponible');
+        }
+
+        return $this->render('utilisateur/profil_public.html.twig', [
+            'utilisateur' => $participant,
         ]);
     }
 
