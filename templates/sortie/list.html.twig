@@ -10,6 +10,10 @@
         <h1 class="mb-4 text-center">Liste des sorties</h1>
 
 
+
+
+{#        ---------------------------------------------------- La barre des différents filtres ----------------------------------------------------#}
+
         <form method="get" action="{{ path('app_sortie_list') }}" class="mb-4">
             <div class="row g-3 align-items-end">
 
@@ -118,10 +122,18 @@
                             onmouseout="this.style.backgroundColor='#8f00ff'; this.style.borderColor='#8f00ff';">
                         Filtrer
                     </button>
+                <div class="col-md-5 mt-3 d-flex justify-content-lg-start align-items-center gap-3">
+                    <button type="submit" class="btn btn-primary">Filtrer</button>
+
+                    {% if app.user %}
+                        <a href="{{ path('app_sortie_create') }}" class="btn btn-success">Créer une sortie</a>
+                    {% endif %}
                 </div>
             </div>
         </form>
 
+
+{#------------------------------------------------ Affichage des sorties ------------------------------------------------#}
 
         <div class="row g-4">
             {% for s in sorties %}
@@ -157,20 +169,24 @@
                                 <a href="{{ path('app_sortie_show', {'id': s.id}) }}" class="btn btn-outline-primary flex-grow-1">Détails</a>
 
                                 {% if app.user %}
+                                    {% set estOrganisateur = s.participant and app.user.id == s.participant.id %}
                                     {% set estInscrit = false %}
+
                                     {% for inscription in s.inscriptions %}
-                                        {% if inscription.participant.id == app.user.id %}
+                                        {% if inscription.participant and inscription.participant.id == app.user.id %}
                                             {% set estInscrit = true %}
                                         {% endif %}
                                     {% endfor %}
 
-                                    {% if not estInscrit %}
-                                        <form method="post" action="{{ path('app_sortie_rejoindre', {'id': s.id}) }}" class="flex-grow-1">
-                                            <input type="hidden" name="_token" value="{{ csrf_token('rejoindre' ~ s.id) }}">
-                                            <button type="submit" class="btn btn-success w-100">Rejoindre</button>
-                                        </form>
-                                    {% else %}
-                                        <button type="button" class="btn btn-secondary flex-grow-1" disabled>Déjà inscrit</button>
+                                    {% if not estOrganisateur %}
+                                        {% if estInscrit %}
+                                            <button type="button" class="btn btn-secondary flex-grow-1" disabled>Déjà inscrit</button>
+                                        {% else %}
+                                            <form method="post" action="{{ path('app_sortie_rejoindre', {'id': s.id}) }}" class="flex-grow-1">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('rejoindre' ~ s.id) }}">
+                                                <button type="submit" class="btn btn-success w-100">Rejoindre</button>
+                                            </form>
+                                        {% endif %}
                                     {% endif %}
                                 {% else %}
                                     <a href="{{ path('app_utilisateur_inscription') }}" class="btn btn-primary flex-grow-1">Inscription au site</a>
