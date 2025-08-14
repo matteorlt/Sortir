@@ -32,7 +32,7 @@ final class PasswordResetController extends AbstractController
             return $this->render('security/forgot_password.html.twig');
         }
 
-        $email = (string) $request->request->get('emails');
+        $email = (string) $request->request->get('email');
 
         $violations = $validator->validate($email, [
             new NotBlank(message: 'Merci de renseigner votre emails.'),
@@ -51,8 +51,8 @@ final class PasswordResetController extends AbstractController
         if ($user instanceof Participant) {
             $expiresAt = new \DateTimeImmutable('+1 hour');
             $token = $tokenService->generateToken($user, $expiresAt);
-            $resetUrl = $this->generateUrl('app_reset_password', ['token' => $token], 0);
-            $absoluteUrl = $request->getSchemeAndHttpHost() . $resetUrl;
+            $resetUrl = $this->generateUrl('app_reset_password', ['token' => $token], \Symfony\Component\Routing\Generator\UrlGeneratorInterface::ABSOLUTE_URL);
+            $absoluteUrl = $resetUrl;
 
             $message = (new Email())
                 ->from('no-reply@example.test')

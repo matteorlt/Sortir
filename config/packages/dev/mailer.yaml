@@ -1,0 +1,7 @@
+framework:
+    mailer:
+        # Configuration Mailtrap avec vos vraies données
+        dsn: 'smtp://2a15064f53faa8:a158c62f219f4a@sandbox.smtp.mailtrap.io:2525?encryption=tls&auth_mode=login'
+        
+        # Alternative : utiliser le transport null pour désactiver l'envoi d'emails
+        # dsn: 'null://null'

@@ -1,0 +1,7 @@
+framework:
+    messenger:
+        transports:
+            sync: 'sync://'
+        routing:
+            # Désactiver le transport asynchrone pour les emails en dev
+            Symfony\Component\Mailer\Messenger\SendEmailMessage: sync
