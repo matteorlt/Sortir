@@ -6,6 +6,7 @@ use App\Entity\Campus;
 use App\Entity\Participant;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
@@ -50,6 +51,11 @@ class ProfilEditType extends AbstractType
                         'mimeTypesMessage' => 'Veuillez uploader une image valide (JPG, PNG, GIF)',
                     ])
                 ],
+            ])
+            ->add('actif', CheckboxType::class, [
+                'label' => 'Stagiaire actif',
+                'required' => false,
+                'help' => 'Désactivez si vous n\'êtes plus stagiaire',
             ])
             ->add('campus', EntityType::class, [
                 'class' => Campus::class,

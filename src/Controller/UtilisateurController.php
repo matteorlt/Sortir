@@ -22,6 +22,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use App\Form\CsvImportType;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 
 final class UtilisateurController extends AbstractController
@@ -145,73 +146,81 @@ final class UtilisateurController extends AbstractController
         ]);
     }
 
-    #[Route('/profil/edit/password', name: 'app_utilisateur_edit_profil_password')]
-    public function profilEditPassword(
-        Request $request,
-        EntityManagerInterface $em,
-        UserPasswordHasherInterface $passwordHasher
-    ): Response
+    #[Route('/profil/edit', name: 'app_utilisateur_edit_profil', methods: ['GET', 'POST'])]
+    public function profilEdit(Request $request, EntityManagerInterface $em): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         /** @var Participant $user */
         $user = $this->getUser();
 
-        // Formulaire de changement de mot de passe (correspond au template)
-        $form = $this->createFormBuilder()
-            ->add('currentPassword', PasswordType::class, [
-                'label' => 'Mot de passe actuel',
-                'mapped' => false,
-                'required' => true,
-                'attr' => ['autocomplete' => 'current-password'],
-            ])
-            ->add('newPassword', RepeatedType::class, [
-                'type' => PasswordType::class,
-                'mapped' => false,
-                'first_options'  => [
-                    'label' => 'Nouveau mot de passe',
-                    'attr' => ['autocomplete' => 'new-password'],
-                ],
-                'second_options' => [
-                    'label' => 'Confirmez le nouveau mot de passe',
-                    'attr' => ['autocomplete' => 'new-password'],
-                ],
-                'invalid_message' => 'Les mots de passe ne correspondent pas.',
-            ])
-            ->getForm();
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $current = (string) $form->get('currentPassword')->getData();
-
-            if (!$passwordHasher->isPasswordValid($user, $current)) {
-                $form->get('currentPassword')->addError(new FormError('Mot de passe actuel invalide.'));
-            } else {
-                $new = (string) $form->get('newPassword')->getData();
-                $hashed = $passwordHasher->hashPassword($user, $new);
-                $user->setMotDePasse($hashed);
-
-                $em->flush();
-
-                $this->addFlash('success', 'Votre mot de passe a été mis à jour.');
-                return $this->redirectToRoute('app_utilisateur_profil');
+        if ($request->isMethod('POST')) {
+            // CSRF
+            $token = (string) $request->request->get('_token');
+            if (!$this->isCsrfTokenValid('edit_profil', $token)) {
+                $this->addFlash('danger', 'Jeton CSRF invalide.');
+                return $this->redirectToRoute('app_utilisateur_edit_profil');
             }
+
+            // Récupération/normalisation des champs
+            $pseudo     = trim((string) $request->request->get('pseudo', ''));
+            $nom        = trim((string) $request->request->get('nom', ''));
+            $prenom     = trim((string) $request->request->get('prenom', ''));
+            $telephone  = trim((string) $request->request->get('telephone', ''));
+            $mail       = trim((string) $request->request->get('mail', ''));
+            $actif      = trim((string) $request->request->get('actif', ''));
+
+            // Validations simples (adaptez selon vos règles)
+            $errors = [];
+            if ($pseudo === '')   { $errors[] = 'Le pseudo est obligatoire.'; }
+            if ($nom === '')      { $errors[] = 'Le nom est obligatoire.'; }
+            if ($prenom === '')   { $errors[] = 'Le prénom est obligatoire.'; }
+            if ($mail === '' || !filter_var($mail, FILTER_VALIDATE_EMAIL)) {
+                $errors[] = 'Adresse e‑mail invalide.';
+            }
+
+            // Gestion upload photo (optionnelle)
+            $uploadedFile = $request->files->get('photoFile');
+            if ($uploadedFile) {
+                try {
+                    $newName = uniqid('pp_', true) . '.' . $uploadedFile->guessExtension();
+                    $targetDir = $this->getParameter('kernel.project_dir') . '/public/uploads/photos';
+                    $uploadedFile->move($targetDir, $newName);
+                    if (method_exists($user, 'setPhoto')) {
+                        $user->setPhoto($newName);
+                    }
+                } catch (\Throwable $e) {
+                    $errors[] = "Échec de l'upload de la photo.";
+                }
+            }
+
+            if (count($errors) > 0) {
+                foreach ($errors as $err) {
+                    $this->addFlash('danger', $err);
+                }
+                // On ré-affiche le formulaire avec les messages
+                return $this->render('utilisateur/edit_profil.html.twig', [
+                    'utilisateur' => $user,
+                ]);
+            }
+
+            // Persistance des modifications
+            $user->setPseudo($pseudo);
+            $user->setNom($nom);
+            $user->setPrenom($prenom);
+            $user->setTelephone($telephone !== '' ? $telephone : null);
+            $user->setMail($mail);
+            $user->setActif($actif);
+
+            $em->flush();
+
+            $this->addFlash('success', 'Profil mis à jour avec succès.');
+            return $this->redirectToRoute('app_utilisateur_profil');
         }
 
-        return $this->render('utilisateur/edit_profil_password.html.twig', [
-            'utilisateur' => $user,
-            'form' => $form->createView(),
-        ]);
-    }
-
-    #[Route('/profil/edit', name: 'app_utilisateur_edit_profil')]
-    public function profilEdit(): Response
-    {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
+        // GET: affichage du formulaire
         return $this->render('utilisateur/edit_profil.html.twig', [
-            'utilisateur' => $this->getUser(),
+            'utilisateur' => $user,
         ]);
     }
 

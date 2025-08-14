@@ -29,12 +29,27 @@
                         <form method="post" action="" enctype="multipart/form-data" novalidate>
                             <input type="hidden" name="_token" value="{{ csrf_token('edit_profil') }}">
 
-                            {# Photo (optionnelle) #}
+                            <!-- Photo de profil avec gestion de l'image -->
+                            <div class="text-center mb-4">
+                                {% if app.user.photo %}
+                                    <!-- Si l'utilisateur a une photo -->
+                                    <div class="position-relative mx-auto" style="width: 120px; height: 120px;">
+                                        <img src="{{ asset('uploads/photos/' ~ app.user.photo) }}"
+                                             alt="Photo de {{ app.user.prenom }}"
+                                             class="rounded-circle border border-3 w-100 h-100 object-fit-cover"
+                                             style="border-color: #8f00ff !important;">
+                                    </div>
+                                {% else %}
+                                    <!-- Si pas de photo, afficher l'icône par défaut -->
+                                    <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center mx-auto border border-3"
+                                         style="width: 120px; height: 120px; border-color: #8f00ff !important;">
+                                        <i class="fas fa-user fa-3x text-white"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            {# Photo #}
                             <div class="mb-4 text-center">
-                                <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center mx-auto border border-3"
-                                     style="width: 120px; height: 120px; border-color: #8f00ff !important;">
-                                    <i class="fas fa-user fa-3x text-white"></i>
-                                </div>
                                 <div class="mt-3">
                                     <label for="photoFile" class="form-label fw-bold mb-1">Photo de profil</label>
                                     <input class="form-control" type="file" id="photoFile" name="photoFile" accept="image/*">
@@ -79,7 +94,14 @@
                                            value="{{ app.user.mail ?? '' }}" required placeholder="votre.email@eni.fr">
                                 </div>
                             </div>
-
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="actif" name="actif"
+                                        {{ app.user.actif ? 'checked' : '' }}>
+                                <label for="actif" class="form-check-label fw-bold">
+                                    Stagiaire actif
+                                </label>
+                                <div class="form-text">Désactivez si vous n'êtes plus stagiaire</div>
+                            </div>
                             <div class="mb-4">
                                 <label for="campus" class="form-label fw-bold">Campus</label>
                                 <span class="text-danger">*</span>
@@ -108,12 +130,6 @@
                         </form>
 
                         <hr class="my-4">
-
-                        <div class="text-center">
-                            <a href="{{ path('app_utilisateur_edit_profil_password') }}" class="btn btn-outline-primary btn-lg">
-                                <i class="fas fa-key me-2"></i>Changer mon mot de passe
-                            </a>
-                        </div>
                     </div>
                 </div>
             </div>
