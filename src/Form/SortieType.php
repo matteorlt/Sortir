@@ -75,14 +75,6 @@ final class SortieType extends AbstractType
             ->add('ville_nom', HiddenType::class, ['mapped' => false])
             ->add('code_postal', HiddenType::class, ['mapped' => false])
 
-            // Etat via enum (non mappé -> conversion en entité dans le contrôleur)
-            ->add('statut', EnumType::class, [
-                'label' => 'Statut',
-                'class' => Statut::class,
-                'mapped' => false,
-                'placeholder' => 'Choisir un statut',
-                'choice_label' => fn(Statut $s) => $s->value,
-            ])
             // Campus via enum (non mappé -> recherche entité dans le contrôleur)
             ->add('campus', EnumType::class, [
                 'label' => 'Campus',
