@@ -22,7 +22,7 @@ class SortieRepository extends ServiceEntityRepository
      * @return Sortie[] Returns an array of Sortie objects
      */
 
-    public function findFiltered(?string $sortDate, ?string $participantRange, ?string $campus, ?string $search, ?string $categorie, bool $isInscrit = false, bool $isOuvert = false, ?Participant $participant = null): array
+    public function findFiltered(?string $sortDate, ?string $participantRange, ?string $campus, ?string $search, ?string $categorie, ?string $etat, bool $isInscrit = false, ?Participant $participant = null, bool $isOrganisateur = false): array
     {
         $qb = $this->createQueryBuilder('s');
 
@@ -73,9 +73,31 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('participant', $participant);
         }
 
-        if ($isOuvert) {
-            $qb->andWhere('s.dateCloture > :now')
-                ->setParameter('now', new \DateTimeImmutable());
+        if ($isOrganisateur && $participant) {
+            // Suppose que la propriété organisateur dans Sortie est un ManyToOne vers Participant
+            $qb->andWhere('s.participant = :participantOrganisateur')
+                ->setParameter('participantOrganisateur', $participant);
+        }
+
+        if ($etat) {
+            $now = new \DateTime();
+
+            if ($etat === 'ouvert') {
+                // Sorties où dateCloture est dans le futur et nombre d'inscrits < max
+                $qb
+                    ->andWhere('s.dateCloture > :now')
+                    ->setParameter('now', $now)
+                    ->andWhere('(SIZE(s.inscriptions) < s.nbInscriptionMax)');
+            } elseif ($etat === 'ferme') {
+                // Sorties où dateCloture est passé ou nombre d'inscrits >= max
+                $qb->andWhere('s.dateCloture <= :now OR SIZE(s.inscriptions) >= s.nbInscriptionMax')
+                    ->setParameter('now', $now);
+            } elseif ($etat === 'encours') {
+                // Sorties où dateDebut <= now <= dateFin (dateDebut + durée)
+                $qb
+                    ->andWhere('s.dateDebut <= :now AND DATE_ADD(s.dateDebut, s.duree, \'HOUR\') >= :now')
+                    ->setParameter('now', $now);
+            }
         }
 
         return $qb->getQuery()->getResult();

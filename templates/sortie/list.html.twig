@@ -10,9 +10,7 @@
         <h1 class="mb-4 text-center">Liste des sorties</h1>
 
 
-
-
-{#        ---------------------------------------------------- La barre des différents filtres ----------------------------------------------------#}
+        {#        ---------------------------------------------------- La barre des différents filtres --------------------------------------------------- -#}
 
         <form method="get" action="{{ path('app_sortie_list') }}" class="mb-4">
             <div class="row g-3 align-items-end">
@@ -86,6 +84,16 @@
                 </div>
 
                 <div class="col-md-3">
+                    <label for="etat" class="form-label">État</label>
+                    <select name="etat" id="etat" class="form-select">
+                        <option value="">-- Tous les états --</option>
+                        <option value="ouvert" {% if app.request.get('etat') == 'ouvert' %}selected{% endif %}>Ouvert</option>
+                        <option value="ferme" {% if app.request.get('etat') == 'ferme' %}selected{% endif %}>Fermé</option>
+                        <option value="encours" {% if app.request.get('etat') == 'encours' %}selected{% endif %}>En cours</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
                     <div class="form-check">
                         <input
                                 class="form-check-input"
@@ -104,20 +112,21 @@
                         <input
                                 class="form-check-input"
                                 type="checkbox"
-                                name="isOuvert"
-                                id="isOuvert"
+                                name="isOrganisateur"
+                                id="isOrganisateur"
                                 value="1"
-                                {% if app.request.get('isOuvert') %}checked{% endif %}
+                                {% if app.request.get('estOrganisateur') %}checked{% endif %}
                         >
-                        <label class="form-check-label" for="isOuvert">
-                            Sorties encore ouvertes
+                        <label class="form-check-label" for="isOrganisateur">
+                            Mes sorties créées
                         </label>
                     </div>
                 </div>
 
                 <div class="col-md-12 mt-3">
                     <button type="submit"
-                            class="btn btn-primary"style="background-color: #8f00ff; border-color: #8f00ff; transition: all 0.3s ease;"
+                            class="btn btn-primary"
+                            style="background-color: #8f00ff; border-color: #8f00ff; transition: all 0.3s ease;"
                             onmouseover="this.style.backgroundColor='#7300cc'; this.style.borderColor='#7300cc';"
                             onmouseout="this.style.backgroundColor='#8f00ff'; this.style.borderColor='#8f00ff';">
                         Filtrer
@@ -131,15 +140,28 @@
         </form>
 
 
-{#------------------------------------------------ Affichage des sorties ------------------------------------------------#}
+        {#- ----------------------------------------------- Affichage des sorties ----------------------------------------------- -#}
 
         <div class="row g-4">
             {% for s in sorties %}
                 <div class="col-md-6">
                     <div class="card h-100 shadow-sm">
-                        <div class="card-header bg-primary text-white">
+                        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                             <h5 class="card-title mb-0">{{ s.nomSortie }}</h5>
+
+                            {# Calcul de l'état #}
+                            {% set now = "now"|date("U") %}
+                            {% set dateCloture = s.dateCloture ? s.dateCloture|date("U") : 0 %}
+                            {% set nbInscrits = s.inscriptions|length %}
+                            {% set maxInscrits = s.nbInscriptionMax %}
+
+                            {% if now > dateCloture or nbInscrits >= maxInscrits %}
+                                <h5><span class="badge bg-danger">Fermé</span></h5>
+                            {% else %}
+                                <h5><span class="badge bg-success">Ouvert</span></h5>
+                            {% endif %}
                         </div>
+
                         <div class="card-body d-flex flex-column">
                             <p class="card-text"><strong>Date de début
                                     :</strong> {{ s.dateDebut ? s.dateDebut|date('d/m/Y H:i') : 'N/A' }}</p>
@@ -149,22 +171,32 @@
                             <p class="card-text"><strong>Max participants :</strong> {{ s.nbInscriptionMax }}</p>
                             <p class="card-text"><strong>Adresse :</strong> {{ s.lieu.nomLieu }}</p>
                             <p class="card-text"><strong>Catégorie :</strong> {{ s.categorie }}</p>
-                            <p class="card-text">
-                                <strong>Organisateur :</strong>
-                                {% if s.participant %}
-                                    {% set displayName = (s.participant.prenom is defined and s.participant.prenom ? (s.participant.prenom ~ ' ') : '') ~
-                                        (s.participant.nom is defined and s.participant.nom ? s.participant.nom : '') %}
-                                    <span class="col-sm-8">
-                                          {{ displayName is not empty ? displayName :
-                                          (s.participant.username is defined and s.participant.username ? s.participant.username :
-                                          (s.participant.email is defined and s.participant.email ? s.participant.email : 'Inconnu')) }}
-                                    </span>
-                                {% else %}
-                                    <span class="col-sm-8">Inconnu</span>
-                                {% endif %}
-                            </p>
+                            <p class="card-text"><strong>Organisateur :</strong></p>
+                            {% if s.participant %}
+                                {% set displayName = (s.participant.prenom is defined and s.participant.prenom ? (s.participant.prenom ~ ' ') : '') ~
+                                    (s.participant.nom is defined and s.participant.nom ? s.participant.nom : '') %}
+                                <dd class="col-sm-8">
+                                    <a href="{{ path('app_utilisateur_profil_public', {'id': s.participant.id}) }}"
+                                       class="text-decoration-none fw-medium"
+                                       style="color: #8f00ff;"
+                                       onmouseover="this.style.color='#7300cc';"
+                                       onmouseout="this.style.color='#8f00ff';">
+                                        <i class="fas fa-user me-1"></i>
+                                        {{ displayName is not empty ? displayName :
+                                        (sortie.participant.username is defined and sortie.participant.username ? sortie.participant.username :
+                                        (sortie.participant.email is defined and sortie.participant.email ? sortie.participant.email : 'Inconnu')) }}
+                                    </a>
+                                </dd>
+                            {% else %}
+                                <dd class="col-sm-8">
+                                <span class="text-muted">
+                                    <i class="fas fa-user-slash me-1"></i>Inconnu
+                                </span>
+                                </dd>
+                            {% endif %}
                             <div class="mt-auto d-flex gap-2">
-                                <a href="{{ path('app_sortie_show', {'id': s.id}) }}" class="btn btn-outline-primary flex-grow-1">Détails</a>
+                                <a href="{{ path('app_sortie_show', {'id': s.id}) }}"
+                                   class="btn btn-outline-primary flex-grow-1">Détails</a>
 
                                 {% if app.user %}
                                     {% set estOrganisateur = s.participant and app.user.id == s.participant.id %}
@@ -181,13 +213,18 @@
 
                                     {% if not estOrganisateur %}
                                         {% if estInscrit %}
-                                            <form method="post" action="{{ path('app_sortie_desister', {'id': s.id}) }}" class="flex-grow-1">
-                                                <input type="hidden" name="_token" value="{{ csrf_token('desister' ~ s.id) }}">
+                                            <form method="post" action="{{ path('app_sortie_desister', {'id': s.id}) }}"
+                                                  class="flex-grow-1">
+                                                <input type="hidden" name="_token"
+                                                       value="{{ csrf_token('desister' ~ s.id) }}">
                                                 <button type="submit" class="btn btn-danger w-100">Se désister</button>
                                             </form>
                                         {% elseif nbInscrits < maxInscrits %}
-                                            <form method="post" action="{{ path('app_sortie_rejoindre', {'id': s.id}) }}" class="flex-grow-1">
-                                                <input type="hidden" name="_token" value="{{ csrf_token('rejoindre' ~ s.id) }}">
+                                            <form method="post"
+                                                  action="{{ path('app_sortie_rejoindre', {'id': s.id}) }}"
+                                                  class="flex-grow-1">
+                                                <input type="hidden" name="_token"
+                                                       value="{{ csrf_token('rejoindre' ~ s.id) }}">
                                                 <button type="submit" class="btn btn-success w-100">Rejoindre</button>
                                             </form>
                                         {% else %}
@@ -196,7 +233,8 @@
                                     {% endif %}
 
                                 {% else %}
-                                    <a href="{{ path('app_utilisateur_inscription') }}" class="btn btn-primary flex-grow-1">Inscription au site</a>
+                                    <a href="{{ path('app_utilisateur_inscription') }}"
+                                       class="btn btn-primary flex-grow-1">Inscription au site</a>
                                 {% endif %}
                             </div>
                         </div>

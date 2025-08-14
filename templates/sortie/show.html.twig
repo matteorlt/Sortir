@@ -11,7 +11,7 @@
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <div class="card shadow-lg">
+                <div class="card">
                     <div class="card-header bg-primary text-white">
                         <h2 class="mb-0">{{ sortie.nomSortie }}</h2>
                     </div>
@@ -51,25 +51,48 @@
                             <dt class="col-sm-4">Catégorie :</dt>
                             <dd class="col-sm-8">{{ sortie.categorie }}</dd>
 
-                            <dt class="col-sm-4">État :</dt>
-                            <dd class="col-sm-8">{{ sortie.etat.libelle.value }}</dd>
-
                             <dt class="col-sm-4">Campus :</dt>
                             <dd class="col-sm-8">
                                 {{ sortie.campus.nomCampus }}
                             </dd>
                             <dt class="col-sm-4">Organisateur :</dt>
-                                {% if sortie.participant %}
-                                    {% set displayName = (sortie.participant.prenom is defined and sortie.participant.prenom ? (sortie.participant.prenom ~ ' ') : '') ~
-                                        (sortie.participant.nom is defined and sortie.participant.nom ? sortie.participant.nom : '') %}
-                                    <dd class="col-sm-8">
-                                          {{ displayName is not empty ? displayName :
-                                          (sortie.participant.username is defined and sortie.participant.username ? sortie.participant.username :
-                                          (sortie.participant.email is defined and sortie.participant.email ? sortie.participant.email : 'Inconnu')) }}
-                                    </dd>
+                            {% if sortie.participant %}
+                                {% set displayName = (sortie.participant.prenom is defined and sortie.participant.prenom ? (sortie.participant.prenom ~ ' ') : '') ~
+                                    (sortie.participant.nom is defined and sortie.participant.nom ? sortie.participant.nom : '') %}
+                                <dd class="col-sm-8">
+                                    <a href="{{ path('app_utilisateur_profil_public', {'id': sortie.participant.id}) }}"
+                                       class="text-decoration-none fw-medium"
+                                       style="color: #8f00ff;"
+                                       onmouseover="this.style.color='#7300cc';"
+                                       onmouseout="this.style.color='#8f00ff';">
+                                        <i class="fas fa-user me-1"></i>
+                                        {{ displayName is not empty ? displayName :
+                                        (sortie.participant.username is defined and sortie.participant.username ? sortie.participant.username :
+                                        (sortie.participant.email is defined and sortie.participant.email ? sortie.participant.email : 'Inconnu')) }}
+                                    </a>
+                                </dd>
+                            {% else %}
+                                <dd class="col-sm-8">
+                                <span class="text-muted">
+                                    <i class="fas fa-user-slash me-1"></i>Inconnu
+                                </span>
+                                </dd>
+                            {% endif %}
+
+                            {# État #}
+                            {% set now = "now"|date("U") %}
+                            {% set dateCloture = sortie.dateCloture ? sortie.dateCloture|date("U") : 0 %}
+                            {% set nbInscrits = sortie.inscriptions ? sortie.inscriptions|length : 0 %}
+                            {% set maxInscrits = sortie.nbInscriptionMax %}
+
+                            <dt class="col-sm-4">État :</dt>
+                            <dd class="col-sm-8">
+                                {% if now > dateCloture or nbInscrits >= maxInscrits %}
+                                    <span class="badge bg-danger">Fermé</span>
                                 {% else %}
-                                    <span class="col-sm-8">Inconnu</span>
+                                    <h6><span class="badge bg-success">Ouvert</span></h6>
                                 {% endif %}
+                            </dd>
 
                     </div>
                     <div class="card-footer text-end">

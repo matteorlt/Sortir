@@ -7,7 +7,6 @@ use App\Entity\Lieu;
 use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Entity\Ville;
-use App\Enum\Statut;
 use App\Enum\CampusEnum;
 use App\Form\SortieType;
 use App\Repository\EtatRepository;
@@ -91,15 +90,6 @@ final class SortieController extends AbstractController
             }
             $sortie->setLieu($lieu);
 
-            // Etat via enum Statut
-            /** @var Statut $statut */
-            $statut = $form->get('statut')->getData();
-            $etat = $etatRepo->findOneBy(['libelle' => $statut]);
-            if (!$etat) {
-                $etat = (new Etat())->setLibelle($statut);
-                $em->persist($etat);
-            }
-            $sortie->setEtat($etat);
 
             // Campus via enum CampusEnum (recherche par nomCampus)
             /** @var CampusEnum|null $campusEnum */
@@ -124,6 +114,7 @@ final class SortieController extends AbstractController
         ]);
     }
 
+
     #[Route('/list', name: 'list', methods: ['GET'])]
     public function list(Request $request, SortieService $sortieService): Response
     {
@@ -132,15 +123,17 @@ final class SortieController extends AbstractController
         $campus = $request->query->get('campus');
         $search = $request->query->get('search');
         $categorie = $request->query->get('categorie');
+        $etat = $request->query->get('etat');
         $isInscrit = $request->query->getBoolean('isInscrit');
-        $isOuvert = $request->query->getBoolean('isOuvert');
+        $isOrganisateur = $request->query->getBoolean('isOrganisateur', false);
 
-        $sorties = $sortieService->filterSorties($sortDate, $participantRange, $campus, $search, $categorie, $isInscrit, $isOuvert, $this->getUser());
+        $sorties = $sortieService->filterSorties($sortDate, $participantRange, $campus, $search, $categorie, $etat, $isInscrit, $this->getUser(), $isOrganisateur);
 
         return $this->render('sortie/list.html.twig', [
             'sorties' => $sorties,
         ]);
     }
+
 
     #[Route('/{id}', name: 'show')]
     public function show(int $id, SortieService $sortieService): Response
@@ -182,6 +175,7 @@ final class SortieController extends AbstractController
 
         return $this->redirectToRoute('app_sortie_list');
     }
+
 
     #[Route('/{id}/desister', name: 'desister', methods: ['POST'])]
     public function desister(int $id, SortieService $sortieService, Request $request): Response
