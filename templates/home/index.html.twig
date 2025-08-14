@@ -26,13 +26,31 @@
 
                     <!-- Boutons d'action -->
                     <div class="d-flex flex-column flex-sm-row gap-3">
-                        <a href="{{ path('app_sortie_list') }}" class="btn btn-primary btn-lg px-4 py-3 fw-medium">
+                        <a href="{{ path('app_sortie_list') }}"
+                           class="btn btn-primary btn-lg px-4 py-3 fw-medium"
+                           style="background-color: #8f00ff; border-color: #8f00ff; transition: all 0.3s ease;"
+                           onmouseover="this.style.backgroundColor='#7300cc'; this.style.borderColor='#7300cc';"
+                           onmouseout="this.style.backgroundColor='#8f00ff'; this.style.borderColor='#8f00ff';">
                             Découvrir les sorties
                         </a>
 
-                        <a href="{{ path('app_sortie_create') }}" class="btn btn-outline-secondary btn-lg px-4 py-3 fw-medium">
-                            Créer une sortie
-                        </a>
+                        {% if app.user %}
+                            <a href="{{ path('app_sortie_create') }}"
+                               class="btn btn-outline-secondary btn-lg px-4 py-3 fw-medium"
+                               style="transition: all 0.3s ease;"
+                               onmouseover="this.style.backgroundColor='#6c757d'; this.style.borderColor='#6c757d'; this.style.color='white';"
+                               onmouseout="this.style.backgroundColor='transparent'; this.style.borderColor='#6c757d'; this.style.color='#6c757d';">
+                                Créer une sortie
+                            </a>
+                        {% else %}
+                            <a href="{{ path('app_login') }}"
+                               class="btn btn-outline-secondary btn-lg px-4 py-3 fw-medium"
+                               style="transition: all 0.3s ease;"
+                               onmouseover="this.style.backgroundColor='#6c757d'; this.style.borderColor='#6c757d'; this.style.color='white';"
+                               onmouseout="this.style.backgroundColor='transparent'; this.style.borderColor='#6c757d'; this.style.color='#6c757d';">
+                                Se connecter pour créer
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
 

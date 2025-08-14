@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Etat;
 use App\Entity\Lieu;
+use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Entity\Ville;
 use App\Enum\Statut;
@@ -127,8 +128,6 @@ final class SortieController extends AbstractController
         ]);
     }
 
-
-
     #[Route('/{id}', name: 'show')]
     public function show(int $id, SortieService $sortieService): Response
     {
@@ -137,5 +136,36 @@ final class SortieController extends AbstractController
         return $this->render('sortie/show.html.twig', [
             'sortie' => $sortie,
         ]);
+    }
+
+
+    #[Route('/{id}/rejoindre', name: 'rejoindre', methods: ['POST'])]
+    public function rejoindre(int $id, SortieService $sortieService, Request $request): Response
+    {
+        $user = $this->getUser();
+
+
+        if (!$user) {
+            $this->addFlash('danger', "Vous devez être connecté.");
+            return $this->redirectToRoute('app_utilisateur_inscription');
+        }
+
+        /** @var Participant $participant */
+        $participant = $user;
+
+        try {
+            $result = $sortieService->rejoindreSortie($id, $participant);
+
+            if ($result) {
+                $this->addFlash('success', 'Vous avez rejoint la sortie !');
+            } else {
+                $this->addFlash('info', 'Vous êtes déjà inscrit à cette sortie.');
+            }
+
+        } catch (\InvalidArgumentException $e) {
+            $this->addFlash('danger', $e->getMessage());
+        }
+
+        return $this->redirectToRoute('app_sortie_list');
     }
 }
