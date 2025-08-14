@@ -42,6 +42,18 @@ final class SortieController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            // S'assurer que l'utilisateur est connecté
+            /** @var Participant|null $user */
+            $user = $this->getUser();
+            if (!$user) {
+                $this->addFlash('danger', "Vous devez être connecté pour créer une sortie.");
+                return $this->redirectToRoute('app_utilisateur_inscription');
+            }
+
+            // Associer le créateur/organisateur
+            $sortie->setParticipant($user);
+
+
             // Données issues de l’API Adresse via champs cachés
             $labelComplet = (string) $form->get('adresse_full')->getData();
             $rue = (string) $form->get('rue')->getData();

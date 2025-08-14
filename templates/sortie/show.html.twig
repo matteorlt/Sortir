@@ -58,6 +58,19 @@
                             <dd class="col-sm-8">
                                 {{ sortie.campus.nomCampus }}
                             </dd>
+                            <dt class="col-sm-4">Organisateur :</dt>
+                                {% if sortie.participant %}
+                                    {% set displayName = (sortie.participant.prenom is defined and sortie.participant.prenom ? (sortie.participant.prenom ~ ' ') : '') ~
+                                        (sortie.participant.nom is defined and sortie.participant.nom ? sortie.participant.nom : '') %}
+                                    <dd class="col-sm-8">
+                                          {{ displayName is not empty ? displayName :
+                                          (sortie.participant.username is defined and sortie.participant.username ? sortie.participant.username :
+                                          (sortie.participant.email is defined and sortie.participant.email ? sortie.participant.email : 'Inconnu')) }}
+                                    </dd>
+                                {% else %}
+                                    <span class="col-sm-8">Inconnu</span>
+                                {% endif %}
+
                     </div>
                     <div class="card-footer text-end">
                         <a href="{{ path('app_sortie_list') }}" class="btn btn-secondary">← Retour à la liste</a>
