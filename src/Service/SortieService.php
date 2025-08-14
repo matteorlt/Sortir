@@ -6,6 +6,7 @@ use App\Entity\Inscription;
 use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Repository\SortieRepository;
+use App\Service\SortieEmailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -15,7 +16,8 @@ class SortieService
     public function __construct(
         private SortieRepository $sortieRepository,
         private LoggerInterface $logger,
-        private EntityManagerInterface $em
+        private EntityManagerInterface $em,
+        private SortieEmailService $emailService
     ) {}
 
     /**
@@ -80,6 +82,48 @@ class SortieService
 
         $this->em->persist($inscription);
         $this->em->flush();
+
+        // Envoyer l'email de confirmation d'inscription
+        try {
+            $this->emailService->sendInscriptionConfirmation($inscription);
+        } catch (\Exception $e) {
+            $this->logger->error('Erreur lors de l\'envoi de l\'email de confirmation: ' . $e->getMessage());
+        }
+
+        return true;
+    }
+
+    public function seDesisterSortie(int $sortieId, Participant $participant): bool
+    {
+        $sortie = $this->sortieRepository->find($sortieId);
+
+        if (!$sortie) {
+            throw new \InvalidArgumentException("Sortie introuvable.");
+        }
+
+        // Trouver l'inscription
+        $inscription = null;
+        foreach ($sortie->getInscriptions() as $insc) {
+            if ($insc->getParticipant() === $participant) {
+                $inscription = $insc;
+                break;
+            }
+        }
+
+        if (!$inscription) {
+            return false; // pas inscrit
+        }
+
+        // Supprimer l'inscription
+        $this->em->remove($inscription);
+        $this->em->flush();
+
+        // Envoyer l'email de confirmation de désistement
+        try {
+            $this->emailService->sendDesistementConfirmation($inscription);
+        } catch (\Exception $e) {
+            $this->logger->error('Erreur lors de l\'envoi de l\'email de désistement: ' . $e->getMessage());
+        }
 
         return true;
     }
