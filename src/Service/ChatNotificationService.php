@@ -45,10 +45,13 @@ class ChatNotificationService
      */
     public function sendNotification(Participant $participant, string $title, string $message): void
     {
-        $notification = (new Notification($title, ['email']))
-            ->content($message);
-
-        $this->notifier->send($notification, new Recipient($participant->getEmail()));
+        // Pour l'instant, on désactive les notifications email car pas de transport configuré
+        // $notification = (new Notification($title, ['email']))
+        //     ->content($message);
+        // $this->notifier->send($notification, new Recipient($participant->getEmail()));
+        
+        // On peut implémenter d'autres types de notifications ici
+        // Par exemple : notifications push, SMS, etc.
     }
 
     /**

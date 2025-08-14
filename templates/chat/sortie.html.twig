@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Chat - Sortir.com{% endblock %}
+{% block title %}Chat - {{ sortie.nomSortie }} - Sortir.com{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -18,6 +18,13 @@
             color: white;
             padding: 15px 20px;
             font-weight: 600;
+        }
+        
+        .sortie-info-header {
+            background: rgba(255,255,255,0.1);
+            padding: 10px 15px;
+            margin: -15px -20px 15px -20px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
         }
         
         .chat-messages {
@@ -117,61 +124,20 @@
             margin-right: 8px;
         }
         
-        .notification-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background-color: #dc3545;
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
             color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .sortie-chat-card {
-            background: white;
-            border: 1px solid #e9ecef;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-            height: 100%;
-        }
-        
-        .sortie-chat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-        }
-        
-        .sortie-header h5 {
-            color: #8f00ff;
-            font-weight: 600;
-        }
-        
-        .sortie-info p {
-            color: #6c757d;
-            margin-bottom: 10px;
-        }
-        
-        .btn-chat {
-            background: linear-gradient(135deg, #8f00ff, #7300cc);
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 25px;
+            padding: 8px 15px;
+            border-radius: 20px;
             text-decoration: none;
             transition: all 0.3s ease;
-            width: 100%;
+            margin-right: 15px;
         }
         
-        .btn-chat:hover {
-            background: linear-gradient(135deg, #7300cc, #5a0099);
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
             color: white;
-            transform: translateY(-2px);
         }
     </style>
 {% endblock %}
@@ -182,43 +148,71 @@
         <div class="col-12">
             <div class="chat-container">
                 <div class="chat-header">
-                    <i class="fas fa-comments me-2"></i>
-                    Chats des Sorties
-                    <span class="online-indicator"></span>
-                    <small class="ms-2">Sélectionnez une sortie pour chatter</small>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <a href="{{ path('app_chat_index') }}" class="back-btn">
+                                <i class="fas fa-arrow-left me-2"></i>Retour
+                            </a>
+                            <i class="fas fa-comments me-2"></i>
+                            Chat - {{ sortie.nomSortie }}
+                        </div>
+                        <span class="online-indicator"></span>
+                        <small>En ligne</small>
+                    </div>
+                    
+                    <div class="sortie-info-header">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <strong>Date :</strong> {{ sortie.dateDebut|date('d/m/Y H:i') }}
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Lieu :</strong> {{ sortie.lieu.ville.nomVille }}
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-md-6">
+                                <strong>Organisateur :</strong> {{ sortie.participant.prenom }} {{ sortie.participant.nom }}
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Inscrits :</strong> {{ sortie.inscriptions|length }}/{{ sortie.nbInscriptionMax }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="chat-sorties-list">
-                    {% if sorties is empty %}
-                        <div class="text-center py-5">
-                            <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
-                            <h4 class="text-muted">Aucune sortie</h4>
-                            <p class="text-muted">Vous n'êtes inscrit à aucune sortie pour le moment.</p>
-                            <a href="{{ path('app_sortie_list') }}" class="btn btn-primary">
-                                <i class="fas fa-plus me-2"></i>Découvrir des sorties
-                            </a>
-                        </div>
-                    {% else %}
-                        <div class="row">
-                            {% for sortie in sorties %}
-                                <div class="col-md-6 col-lg-4 mb-3">
-                                    <div class="sortie-chat-card">
-                                        <div class="sortie-header">
-                                            <h5 class="mb-1">{{ sortie.nomSortie }}</h5>
-                                            <small class="text-muted">{{ sortie.dateDebut|date('d/m/Y H:i') }}</small>
-                                        </div>
-                                        <div class="sortie-info">
-                                            <p class="mb-2">{{ sortie.lieu.ville.nomVille }}</p>
-                                            <span class="badge bg-primary">{{ sortie.inscriptions|length }} inscrits</span>
-                                        </div>
-                                        <a href="{{ path('app_chat_sortie', {'id': sortie.id}) }}" class="btn btn-chat">
-                                            <i class="fas fa-comments me-2"></i>Ouvrir le chat
-                                        </a>
-                                    </div>
+                <div class="chat-messages" id="chatMessages">
+                    {% for message in messages %}
+                        <div class="message {% if message.expediteur.id == app.user.id %}own{% endif %}">
+                            <div class="message-content">
+                                <div class="message-text">{{ message.contenu }}</div>
+                                <div class="message-info">
+                                    {% if message.expediteur.id == app.user.id %}
+                                        Vous
+                                    {% else %}
+                                        {{ message.expediteur.prenom }} {{ message.expediteur.nom }}
+                                    {% endif %}
+                                    - {{ message.dateEnvoi|date('H:i') }}
                                 </div>
-                            {% endfor %}
+                            </div>
                         </div>
-                    {% endif %}
+                    {% endfor %}
+                </div>
+                
+                <div class="typing-indicator" id="typingIndicator" style="display: none;">
+                    <em>Quelqu'un tape...</em>
+                </div>
+                
+                <div class="chat-input-container">
+                    <div class="d-flex">
+                        <input type="text" 
+                               class="chat-input" 
+                               id="messageInput" 
+                               placeholder="Tapez votre message..."
+                               maxlength="500">
+                        <button class="send-btn" id="sendBtn">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -231,19 +225,29 @@
     <script>
         class ChatManager {
             constructor() {
+                console.log('Initialisation de ChatManager...');
                 this.ws = null;
                 this.messageInput = document.getElementById('messageInput');
                 this.sendBtn = document.getElementById('sendBtn');
                 this.chatMessages = document.getElementById('chatMessages');
                 this.typingIndicator = document.getElementById('typingIndicator');
+                
+                // Debug des éléments
+                console.log('messageInput:', this.messageInput);
+                console.log('sendBtn:', this.sendBtn);
+                console.log('chatMessages:', this.chatMessages);
+                console.log('typingIndicator:', this.typingIndicator);
+                
                 this.typingTimeout = null;
                 this.userId = {{ app.user.id }};
                 this.userName = '{{ app.user.prenom }}';
+                this.sortieId = {{ sortie.id }};
                 
                 this.init();
             }
             
             init() {
+                console.log('Méthode init appelée');
                 this.connectWebSocket();
                 this.bindEvents();
                 this.scrollToBottom();
@@ -253,7 +257,13 @@
                 this.ws = new WebSocket('ws://localhost:8080');
                 
                 this.ws.onopen = () => {
-                    console.log('Connecté au chat');
+                    console.log('Connecté au chat de la sortie', this.sortieId);
+                    // Informer le serveur de la sortie à laquelle on se connecte
+                    this.ws.send(JSON.stringify({
+                        type: 'join_sortie',
+                        sortieId: this.sortieId,
+                        userId: this.userId
+                    }));
                 };
                 
                 this.ws.onmessage = (event) => {
@@ -263,7 +273,6 @@
                 
                 this.ws.onclose = () => {
                     console.log('Déconnecté du chat');
-                    // Tentative de reconnexion après 3 secondes
                     setTimeout(() => this.connectWebSocket(), 3000);
                 };
                 
@@ -273,20 +282,35 @@
             }
             
             bindEvents() {
-                this.sendBtn.addEventListener('click', () => this.sendMessage());
-                this.messageInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        this.sendMessage();
-                    }
-                });
+                console.log('Binding des événements...');
+                console.log('sendBtn existe:', !!this.sendBtn);
+                console.log('messageInput existe:', !!this.messageInput);
                 
-                this.messageInput.addEventListener('input', () => {
-                    this.sendTypingStatus(true);
-                    clearTimeout(this.typingTimeout);
-                    this.typingTimeout = setTimeout(() => {
-                        this.sendTypingStatus(false);
-                    }, 1000);
-                });
+                if (this.sendBtn) {
+                    this.sendBtn.addEventListener('click', () => this.sendMessage());
+                    console.log('Événement click ajouté au bouton');
+                } else {
+                    console.error('sendBtn est null!');
+                }
+                
+                if (this.messageInput) {
+                    this.messageInput.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') {
+                            this.sendMessage();
+                        }
+                    });
+                    
+                    this.messageInput.addEventListener('input', () => {
+                        this.sendTypingStatus(true);
+                        clearTimeout(this.typingTimeout);
+                        this.typingTimeout = setTimeout(() => {
+                            this.sendTypingStatus(false);
+                        }, 1000);
+                    });
+                    console.log('Événements ajoutés au champ de saisie');
+                } else {
+                    console.error('messageInput est null!');
+                }
             }
             
             sendMessage() {
@@ -297,7 +321,8 @@
                     this.ws.send(JSON.stringify({
                         type: 'message',
                         content: content,
-                        userId: this.userId
+                        userId: this.userId,
+                        sortieId: this.sortieId
                     }));
                 }
                 
@@ -310,6 +335,7 @@
                     this.ws.send(JSON.stringify({
                         type: 'typing',
                         userId: this.userId,
+                        sortieId: this.sortieId,
                         isTyping: isTyping
                     }));
                 }
@@ -318,10 +344,14 @@
             handleWebSocketMessage(data) {
                 switch (data.type) {
                     case 'message':
-                        this.addMessage(data);
+                        if (data.sortieId == this.sortieId) {
+                            this.addMessage(data);
+                        }
                         break;
                     case 'typing':
-                        this.handleTypingIndicator(data);
+                        if (data.sortieId == this.sortieId) {
+                            this.handleTypingIndicator(data);
+                        }
                         break;
                 }
             }
@@ -349,7 +379,6 @@
                 this.chatMessages.appendChild(messageDiv);
                 this.scrollToBottom();
                 
-                // Notification si ce n'est pas notre message
                 if (!isOwn) {
                     this.showNotification(data.content, senderName);
                 }
@@ -386,12 +415,10 @@
             }
         }
         
-        // Demander la permission pour les notifications
         if ('Notification' in window) {
             Notification.requestPermission();
         }
         
-        // Initialiser le chat quand la page est chargée
         document.addEventListener('DOMContentLoaded', () => {
             new ChatManager();
         });

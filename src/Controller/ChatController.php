@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Message;
 use App\Repository\MessageRepository;
+use App\Repository\SortieRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,22 +18,81 @@ class ChatController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function index(MessageRepository $messageRepository): Response
     {
-        // Récupérer les derniers messages
-        $messages = $messageRepository->findRecentMessages(50);
+        // Récupérer les sorties auxquelles l'utilisateur est inscrit
+        $user = $this->getUser();
+        $inscriptions = $user->getInscritption();
+        
+        $sorties = [];
+        foreach ($inscriptions as $inscription) {
+            $sorties[] = $inscription->getSortie();
+        }
+
+        return $this->render('chat/index.html.twig', [
+            'sorties' => $sorties,
+        ]);
+    }
+
+    #[Route('/sortie/{id}', name: 'app_chat_sortie', methods: ['GET'])]
+    #[IsGranted('ROLE_USER')]
+    public function chatSortie(int $id, MessageRepository $messageRepository, SortieRepository $sortieRepository): Response
+    {
+        $sortie = $sortieRepository->find($id);
+        if (!$sortie) {
+            throw $this->createNotFoundException('Sortie non trouvée');
+        }
+
+        // Vérifier que l'utilisateur est inscrit à cette sortie
+        $user = $this->getUser();
+        $isInscrit = false;
+        
+        foreach ($user->getInscritption() as $inscription) {
+            if ($inscription->getSortie()->getId() === $id) {
+                $isInscrit = true;
+                break;
+            }
+        }
+
+        if (!$isInscrit) {
+            throw $this->createAccessDeniedException('Vous devez être inscrit à cette sortie pour accéder au chat');
+        }
+
+        // Récupérer les messages de cette sortie
+        $messages = $messageRepository->findRecentMessagesBySortie($id, 50);
         
         // Marquer tous les messages comme lus
         $messageRepository->markAllAsRead();
 
-        return $this->render('chat/index.html.twig', [
-            'messages' => array_reverse($messages), // Inverser pour afficher du plus ancien au plus récent
+        return $this->render('chat/sortie.html.twig', [
+            'sortie' => $sortie,
+            'messages' => array_reverse($messages),
         ]);
     }
 
-    #[Route('/messages', name: 'app_chat_messages', methods: ['GET'])]
+    #[Route('/messages/sortie/{id}', name: 'app_chat_messages_sortie', methods: ['GET'])]
     #[IsGranted('ROLE_USER')]
-    public function getMessages(MessageRepository $messageRepository): Response
+    public function getMessagesSortie(int $id, MessageRepository $messageRepository, SortieRepository $sortieRepository): Response
     {
-        $messages = $messageRepository->findRecentMessages(50);
+        $sortie = $sortieRepository->find($id);
+        if (!$sortie) {
+            throw $this->createNotFoundException('Sortie non trouvée');
+        }
+
+        // Vérifier que l'utilisateur est inscrit à cette sortie
+        $user = $this->getUser();
+        $isInscrit = false;
+        
+        foreach ($user->getInscritption() as $inscription) {
+            if ($inscription->getSortie()->getId() === $id) {
+                $isInscrit = true;
+                break;
+            }
+        }
+
+        if (!$isInscrit) {
+            throw $this->createAccessDeniedException('Accès refusé');
+        }
+
+        $messages = $messageRepository->findRecentMessagesBySortie($id, 50);
         
         $data = [];
         foreach ($messages as $message) {
@@ -52,11 +112,31 @@ class ChatController extends AbstractController
         return $this->json($data);
     }
 
-    #[Route('/unread-count', name: 'app_chat_unread_count', methods: ['GET'])]
+    #[Route('/unread-count/sortie/{id}', name: 'app_chat_unread_count_sortie', methods: ['GET'])]
     #[IsGranted('ROLE_USER')]
-    public function getUnreadCount(MessageRepository $messageRepository): Response
+    public function getUnreadCountSortie(int $id, MessageRepository $messageRepository, SortieRepository $sortieRepository): Response
     {
-        $count = $messageRepository->findUnreadMessagesCount();
+        $sortie = $sortieRepository->find($id);
+        if (!$sortie) {
+            throw $this->createNotFoundException('Sortie non trouvée');
+        }
+
+        // Vérifier que l'utilisateur est inscrit à cette sortie
+        $user = $this->getUser();
+        $isInscrit = false;
+        
+        foreach ($user->getInscritption() as $inscription) {
+            if ($inscription->getSortie()->getId() === $id) {
+                $isInscrit = true;
+                break;
+            }
+        }
+
+        if (!$isInscrit) {
+            throw $this->createAccessDeniedException('Accès refusé');
+        }
+
+        $count = $messageRepository->findUnreadMessagesCountBySortie($id);
         return $this->json(['count' => $count]);
     }
 }

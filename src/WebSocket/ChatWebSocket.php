@@ -38,6 +38,9 @@ class ChatWebSocket implements MessageComponentInterface
         }
 
         switch ($data['type']) {
+            case 'join_sortie':
+                $this->handleJoinSortie($from, $data);
+                break;
             case 'message':
                 $this->handleNewMessage($from, $data);
                 break;
@@ -66,10 +69,13 @@ class ChatWebSocket implements MessageComponentInterface
         $message = new Message();
         $message->setContenu($data['content']);
         
-        // Récupérer l'expéditeur (à adapter selon votre logique d'authentification)
+        // Récupérer l'expéditeur et la sortie
         $participant = $this->entityManager->getRepository(Participant::class)->find($data['userId']);
-        if ($participant) {
+        $sortie = $this->entityManager->getRepository(\App\Entity\Sortie::class)->find($data['sortieId']);
+        
+        if ($participant && $sortie) {
             $message->setExpediteur($participant);
+            $message->setSortie($sortie);
             $this->entityManager->persist($message);
             $this->entityManager->flush();
 
@@ -78,6 +84,7 @@ class ChatWebSocket implements MessageComponentInterface
                 'type' => 'message',
                 'id' => $message->getId(),
                 'content' => $message->getContenu(),
+                'sortieId' => $sortie->getId(),
                 'sender' => [
                     'id' => $participant->getId(),
                     'prenom' => $participant->getPrenom(),
@@ -86,8 +93,8 @@ class ChatWebSocket implements MessageComponentInterface
                 'timestamp' => $message->getDateEnvoi()->format('Y-m-d H:i:s')
             ];
 
-            // Diffuser le message à tous les clients
-            $this->broadcast($messageData);
+            // Diffuser le message à tous les clients connectés à cette sortie
+            $this->broadcastToSortie($messageData, $sortie->getId());
         }
     }
 
@@ -102,6 +109,23 @@ class ChatWebSocket implements MessageComponentInterface
         foreach ($this->clients as $client) {
             if ($client !== $from) {
                 $client->send(json_encode($typingData));
+            }
+        }
+    }
+
+    protected function handleJoinSortie(ConnectionInterface $from, array $data)
+    {
+        // Associer le client à une sortie spécifique
+        $from->sortieId = $data['sortieId'];
+        echo "Client {$from->resourceId} rejoint la sortie {$data['sortieId']}\n";
+    }
+
+    protected function broadcastToSortie($data, $sortieId)
+    {
+        // Diffuser le message seulement aux clients connectés à cette sortie
+        foreach ($this->clients as $client) {
+            if (isset($client->sortieId) && $client->sortieId == $sortieId) {
+                $client->send(json_encode($data));
             }
         }
     }

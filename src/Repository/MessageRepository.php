@@ -40,7 +40,23 @@ class MessageRepository extends ServiceEntityRepository
     }
 
     /**
-     * Récupère les derniers messages pour le chat
+     * Récupère les derniers messages pour une sortie spécifique
+     */
+    public function findRecentMessagesBySortie(int $sortieId, int $limit = 50): array
+    {
+        return $this->createQueryBuilder('m')
+            ->select('m', 'e')
+            ->leftJoin('m.expediteur', 'e')
+            ->where('m.sortie = :sortieId')
+            ->setParameter('sortieId', $sortieId)
+            ->orderBy('m.dateEnvoi', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Récupère les derniers messages pour le chat (toutes sorties confondues)
      */
     public function findRecentMessages(int $limit = 50): array
     {
@@ -51,6 +67,21 @@ class MessageRepository extends ServiceEntityRepository
             ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * Récupère les messages non lus pour un utilisateur dans une sortie spécifique
+     */
+    public function findUnreadMessagesCountBySortie(int $sortieId): int
+    {
+        return $this->createQueryBuilder('m')
+            ->select('COUNT(m.id)')
+            ->where('m.sortie = :sortieId')
+            ->andWhere('m.lu = :lu')
+            ->setParameter('sortieId', $sortieId)
+            ->setParameter('lu', false)
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
     /**

@@ -21,6 +21,10 @@ class Message
     #[ORM\JoinColumn(nullable: false)]
     private ?Participant $expediteur = null;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Sortie $sortie = null;
+
     #[ORM\Column]
     private ?\DateTimeImmutable $dateEnvoi = null;
 
@@ -79,6 +83,17 @@ class Message
     public function setLu(bool $lu): static
     {
         $this->lu = $lu;
+        return $this;
+    }
+
+    public function getSortie(): ?Sortie
+    {
+        return $this->sortie;
+    }
+
+    public function setSortie(?Sortie $sortie): static
+    {
+        $this->sortie = $sortie;
         return $this;
     }
 }
